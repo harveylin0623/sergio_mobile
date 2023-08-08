@@ -1,10 +1,11 @@
 Vue.component('tip-modal', {
   props: {
-    id: { type: String, default: Math.random().toString() },
+    id: { type: String, default: 'tip-modal-1' },
     status: { type: Boolean, default: true },
     content: { type: String, default: '' },
+    isOpen: { type: Boolean, default: false },
     showCancel: { type: Boolean, default: true },
-    showConfirm: { type: Boolean, default: true }
+    showConfirm: { type: Boolean, default: true },
   },
   computed: {
     buttonPosition() {
@@ -14,6 +15,11 @@ Vue.component('tip-modal', {
   methods: {
     confirmHandler() {
       this.$emit('confirm', { id: this.id })
+    }
+  },
+  watch: {
+    isOpen(val) {
+      $(`#${this.id}`).modal(val ? 'show' : 'hide')
     }
   },
   template: `
