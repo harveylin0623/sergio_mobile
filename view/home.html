@@ -12,7 +12,7 @@
 	<link rel="preload" as="image" href="../img/banner-empty.jpg" id="banner-preload-image">
 	<link rel="preload" as="image" href="../img/advertise-empty.jpg" id="ad-preload-image">
 	<link rel="preload" as="image" href="../img/popular-empty.jpg" id="popular-preload-image">
-	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../libs/bootstrapIcon/bootstrap-icons.min.css">
 	<link rel="stylesheet" href="../dist/css/vendor.min.css">
 	<link rel="stylesheet" href="../css/main.css" />
 	<script src="../libs/vue/vue.js"></script>
@@ -115,9 +115,12 @@
 
 		<my-footer></my-footer>
 
+		<tip-modal :show-cancel="false"></tip-modal>
+		
+
 	</div>
 	
-	
+	<script src="../js/vue-component/Modal/TipModal.js"></script>
 	<script type="module">
 		import app from '../js/page/home/index.js'
 		app({
@@ -142,6 +145,7 @@
 				productDetail: './allProductDetail.html'
 			}
 		})
+		$('.modal.tip').modal('show')
 	</script>
 </body>
 

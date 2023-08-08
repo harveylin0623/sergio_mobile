@@ -19,10 +19,6 @@ h2 {
 
 hr {
 	margin: map-get($marginData, 12) 0;
-	// &.dashed {
-	// 	margin: 25px 0;
-	// 	border-style: dashed;
-	// }
 }
 
 [v-cloak] {
