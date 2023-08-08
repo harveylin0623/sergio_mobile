@@ -1482,7 +1482,7 @@ input[type=radio]:checked::after {
   border-radius: 1000px;
   font-size: 25px;
 }
-.modal.tip .modal-footer button {
+.modal.tip .modal-footer button, .modal.tip .modal-footer a {
   width: 49%;
 }
 

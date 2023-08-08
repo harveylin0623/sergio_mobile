@@ -277,14 +277,20 @@ Vue.component('relogin-modal', {
     this.isServer = window.checkIsServer()
   },
   template: `
-    <div class="modal fade" id="reloginPopup" data-backdrop="static">
+    <div id="reloginPopup" class="modal fade tip" data-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header justify-content-center">
-            <h5>請重新登入</h5>
+          <div class="modal-header">
+            <div class="type-b">
+					    <i class="bi bi-exclamation-lg"></i>
+				    </div>
+            <h2>提示</h2>
           </div>
-          <div class="modal-footer flex-column">
-            <a :href="realUrl" class="btn btn-limeGreen limit">確認</a>
+          <div class="modal-body">
+            <p class="text-center">請重新登入</p>
+          </div>
+          <div class="justify-content-center modal-footer">
+            <a :href="realUrl" class="btn btn-a">確認</a>
           </div>
         </div>
       </div>
