@@ -14,11 +14,17 @@
 			}
 			.modal-body {
 				padding: 0;
-				color: map-get($basicColor, neutral-2);
-				font-size: map-get($fontSize, sm, size);
 				margin-top: map-get($marginData, 10);
 				margin-bottom: map-get($marginData, 20);
+				color: map-get($basicColor, neutral-2);
+				font-size: map-get($fontSize, sm, size);
 				border: none;
+				.qrcode {
+					@include size(180px);
+					background-image: url("../img/knn-qrcode.png");
+					background-position: center center;
+					background-size: contain;
+				}
 			}
 			.modal-footer {
 				padding: 0;
@@ -26,8 +32,18 @@
 				>* {
 					margin: 0;
 				}
+				button, a {
+					width: 49%;
+				}
 			}
 		}
+	}
+}
+
+.modal-backdrop {
+	background-color: #000;
+	&.show {
+		opacity: 0.7;
 	}
 }
 

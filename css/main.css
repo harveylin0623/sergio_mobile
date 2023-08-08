@@ -1439,11 +1439,18 @@ input[type=radio]:checked::after {
 }
 .modal .modal-dialog .modal-content .modal-body {
   padding: 0;
-  color: #797979;
-  font-size: 14px;
   margin-top: 10px;
   margin-bottom: 20px;
+  color: #797979;
+  font-size: 14px;
   border: none;
+}
+.modal .modal-dialog .modal-content .modal-body .qrcode {
+  width: 180px;
+  height: 180px;
+  background-image: url("../img/knn-qrcode.png");
+  background-position: center center;
+  background-size: contain;
 }
 .modal .modal-dialog .modal-content .modal-footer {
   padding: 0;
@@ -1451,6 +1458,16 @@ input[type=radio]:checked::after {
 }
 .modal .modal-dialog .modal-content .modal-footer > * {
   margin: 0;
+}
+.modal .modal-dialog .modal-content .modal-footer button, .modal .modal-dialog .modal-content .modal-footer a {
+  width: 49%;
+}
+
+.modal-backdrop {
+  background-color: #000;
+}
+.modal-backdrop.show {
+  opacity: 0.7;
 }
 
 .modal.tip .type-a {
