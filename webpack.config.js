@@ -122,6 +122,7 @@ const options = {
 					'js/vue-component/FooterAccordion/index.js',
 					'js/vue-component/FooterAccordion/item.js',
 					'js/vue-component/Loading/index.js',
+					'js/vue-component/Modal/TipModal.js',
 					'js/vue-component/Modal/AppDownloadModal.js',
 					'js/vue-component/Modal/LogoutModal.js',
 					'js/vue-component/Modal/ReloginModal.js',

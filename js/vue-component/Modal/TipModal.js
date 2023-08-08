@@ -2,9 +2,10 @@ Vue.component('tip-modal', {
   props: {
     id: { type: String, default: 'tip-modal-1' },
     status: { type: Boolean, default: true },
+    title: { type: String, default: '提示' },
     content: { type: String, default: '' },
     isOpen: { type: Boolean, default: false },
-    showCancel: { type: Boolean, default: true },
+    showCancel: { type: Boolean, default: false },
     showConfirm: { type: Boolean, default: true },
   },
   computed: {
@@ -14,7 +15,8 @@ Vue.component('tip-modal', {
   },
   methods: {
     confirmHandler() {
-      this.$emit('confirm', { id: this.id })
+      this.$emit('update:isOpen', false)
+      this.$emit('confirm')
     }
   },
   watch: {
@@ -31,9 +33,11 @@ Vue.component('tip-modal', {
               <i v-if="status" class="bi bi-check-lg"></i>
               <i v-else class="bi bi-x-lg"></i>
             </div>
-            <h2>提示</h2>
+            <h2>{{ title }}</h2>
           </div>
-          <div class="modal-body">{{ content }}</div>
+          <div class="modal-body">
+            <p class="text-center">{{ content }}</p>
+          </div>
           <div class="modal-footer" :class="buttonPosition">
             <button v-if="showCancel" class="btn btn-outline-a" data-dismiss="modal">取消</button>
             <button v-if="showConfirm" class="btn btn-a" @click="confirmHandler">確認</button>

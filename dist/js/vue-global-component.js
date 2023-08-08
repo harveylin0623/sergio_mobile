@@ -219,6 +219,54 @@ Vue.component('loading', {
       </div>
     </div>`
 })
+Vue.component('tip-modal', {
+  props: {
+    id: { type: String, default: 'tip-modal-1' },
+    status: { type: Boolean, default: true },
+    title: { type: String, default: '提示' },
+    content: { type: String, default: '' },
+    isOpen: { type: Boolean, default: false },
+    showCancel: { type: Boolean, default: false },
+    showConfirm: { type: Boolean, default: true },
+  },
+  computed: {
+    buttonPosition() {
+      return this.showCancel ? 'justify-content-between' : 'justify-content-center'
+    }
+  },
+  methods: {
+    confirmHandler() {
+      this.$emit('update:isOpen', false)
+      this.$emit('confirm')
+    }
+  },
+  watch: {
+    isOpen(val) {
+      $(`#${this.id}`).modal(val ? 'show' : 'hide')
+    }
+  },
+  template: `
+    <div :id="id" class="modal fade tip" data-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="type-a" :class="[status ? 'correct' : 'wrong']">
+              <i v-if="status" class="bi bi-check-lg"></i>
+              <i v-else class="bi bi-x-lg"></i>
+            </div>
+            <h2>{{ title }}</h2>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">{{ content }}</p>
+          </div>
+          <div class="modal-footer" :class="buttonPosition">
+            <button v-if="showCancel" class="btn btn-outline-a" data-dismiss="modal">取消</button>
+            <button v-if="showConfirm" class="btn btn-a" @click="confirmHandler">確認</button>
+          </div>
+        </div>
+      </div>
+    </div>`
+})
 Vue.component('app-download-modal', {
   template: `
     <div class="modal fade appDownloadPopup" id="appDownloadPopup" data-backdrop="static">
@@ -244,17 +292,21 @@ Vue.component('logout-modal', {
     }
   },
   template: `
-    <div class="modal fade" id="logoutPopup" data-backdrop="static">
+    <div id="logoutPopup" class="modal fade tip" data-backdrop="static">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header justify-content-center">
-            <h2>確定要登出光南帳號?</h2>
+          <div class="modal-header">
+            <div class="type-b">
+              <i class="bi bi-exclamation-lg"></i>
+            </div>
+            <h2>提示</h2>
           </div>
-          <div class="modal-footer flex-column">
-            <button class="btn btn-limeGreen limit mb-2" data-dismiss="modal" @click="logout">
-              確認
-            </button>
-            <button class="btn btn-outline-limeGreen limit" data-dismiss="modal">取消</button>
+          <div class="modal-body">
+            <p class="text-center">您確定要登出?</p>
+          </div>
+          <div class="justify-content-between modal-footer">
+            <button class="btn btn-outline-a" data-dismiss="modal">取消</button>
+            <button class="btn btn-a" data-dismiss="modal" @click="logout">確認</button>
           </div>
         </div>
       </div>
