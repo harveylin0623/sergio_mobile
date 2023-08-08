@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>購物車(1)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">購物車</h2>
+			</div>
+
+			<template v-if="hasCartItem">
+				<div class="mb-3">
+					<div class="container">
+						
+						<div class="stepCnt sm">
+							<div class="sItem ing">
+								<div class="cube">1</div>
+								<div class="text">購物車</div>
+							</div>
+							<div class="sLine"></div>
+							<div class="sItem">
+								<div class="cube">2</div>
+								<div class="text">訂單確認</div>
+							</div>
+							<div class="sLine"></div>
+							<div class="sItem">
+								<div class="cube">3</div>
+								<div class="text">完成訂單</div>
+							</div>
+						</div>
+	
+						<div class="bd-limeGreen rounded">
+							<div class="rounded-top bg-mintGreen bd-bottom-divide cart-table-head">
+								<div class="form-check">
+									<input type="checkbox" id="allCheck" class="form-check-input" v-model="isAllChecked" @change="setCheckedAll">
+									<label class="form-check-label" for="allCheck">全選</label>
+								</div>
+							</div>
+							<div>
+								<component
+									v-for="cart in cartList"
+									:is="cart.componentName"
+									:key="cart.uid"
+									:cart-info="cart"
+									@set-check="setCartItemChecked"
+									@set-count="setCartItemCount"
+									@remove="removeCartItem"
+									@limited-reminder="limitedReminder"
+								></component>
+							</div>
+							<div class="d-flex justify-content-between align-items-center cart-table-subtotal">
+								<p class=" mb-0 title sm">小計加總</p>
+								<p class="text-tomatoRed subtotal">${{ allCartItemSubtotal | currency }}</p>
+							</div>
+							<div class="bg-mintGreen cart-table-head">加購商品</div>
+							<div>
+								<add-on-cart-row 
+									v-for="addOn in addOnList" 
+									:key="addOn.id" 
+									:cart-info="addOn"
+									@set-check="setPurchaseCheck"
+									@set-count="setPurchaseCount"
+									@remove="removePurchaseItem"
+									@limited-reminder="limitedReminder"
+								></add-on-cart-row>
+							</div>
+							<div class="d-flex justify-content-between align-items-center cart-table-subtotal">
+								<p class=" mb-0 title sm">小計加總</p>
+								<p class="text-tomatoRed subtotal">${{ purchaseItemSubtotal | currency }}</p>
+							</div>
+						</div>
+	
+					</div>
+				</div>
+
+				<div class="mb-3 pt-2 bg-term"></div>
+
+				<div class="mb-3">
+					<div class="container">
+						<div class="bd-limeGreen rounded">
+							<div class="rounded-top bg-mintGreen bd-bottom-divide cart-table-head">
+								<p>加購商品</p>
+							</div>
+							<div style="padding:10px;">
+								<div class="swiper addOn-swiper">
+									<div class="swiper-wrapper">
+										<add-on-slide 
+											v-for="purchase in purchaseList"
+											:key="purchase.id" 
+											:purchase="purchase"
+											@intro="introPurchase"
+											@purchase-buy="purchaseBuy"
+										></add-on-slide>
+									</div>
+									<div class="swiper-button-next">
+										<i class="fal fa-arrow-right"></i>
+									</div>
+									<div class="swiper-button-prev">
+										<i class="fal fa-arrow-left"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3 pt-2 bg-term"></div>
+
+				<div class="mb-2">
+					<div class="container">
+						<div class="d-flex align-items-center mb-2">
+							<h3>付款方式</h3>
+							<p class="mb-0 ml-1 text-tomatoRed title sm" @click="showLimitedDesc = !showLimitedDesc">
+								<span>限制說明</span>
+								<i class="fal fa-chevron-down" v-show="!showLimitedDesc"></i>
+								<i class="fal fa-chevron-up" v-show="showLimitedDesc"></i>
+							</p>
+						</div>
+						<div class="mb-2 text-tomatoRed title xs" v-show="showLimitedDesc" v-html="paymentLimit"></div>
+						<div class="d-flex align-items-center flex-wrap">
+							<pay-item 
+								v-for="list in paymentList" 
+								:key="list.type"
+								:pay-type.sync="paymentInfo.type"
+								:payment="list"
+							></pay-item>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3 pt-2 bg-term"></div>
+
+				<div class="mb-3">
+					<div class="container">
+						<h3 class="mb-2">配送方式</h3>
+						<div class="d-flex align-items-center flex-wrap">
+							<delivery-item
+								v-for="delivery in deliveryList"
+								:key="delivery.type"
+								:delivery-type.sync="deliveryType"
+								:delivery="delivery"
+							></delivery-item>
+						</div>
+						<div class="tab-content bg-term rounded" id="nav-tabContent">
+							<home-delivery-from
+								:delivery-type="deliveryType"
+								:has-receipent="hasReceipent"
+								ref="homeDeliveryForm"
+							></home-delivery-from>
+
+							<cvs-delivery-form
+								:delivery-type="deliveryType"
+								:map-url="apiUrl.map"
+								:map-reply-url="apiUrl.mapReply"
+								ref="cvsDeliveryForm"
+							></cvs-delivery-form>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3 pt-2 bg-term"></div>
+
+				<div class="mb-3">
+					<invoice-form
+						:invoice-list="invoiceList"
+						:love-institution="loveInstitution"
+						ref="invoiceForm"
+					></invoice-form>
+				</div>
+
+				<div class="mb-3">
+					<div class="container">
+						<div class="d-flex justify-content-end align-items-center">
+							<button class="btn btn-moBlue limit mr-2" data-toggle="modal" data-target="#pickedTicketModal" v-show="hasPickedTicket">優惠券</button>
+							<button class="btn btn-limeGreen limit" @click="openTicketModal">選擇可用票券</button>
+						</div>
+						<hr>
+						<div class="d-flex justify-content-end">
+							<button class="btn btn-tomatoRed limit" :class="{disabled:!canSettle}" @click="settleHandler">去買單</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3">
+					<div class="container">
+						<h3 class="mb-2">注意事項</h3>
+						<ul class="pl-4 psText" v-html="warningText"></ul>
+					</div>
+				</div>
+
+			</template>
+
+			<div class="container" v-else>
+				<div class="p-4 text-center rounded text-limeGreen bd-limeGreen">
+					<i class="fal fa-exclamation-circle"></i>
+					<span>目前購物車無商品</span>
+				</div>
+			</div>
+		</div>
+
+		<receiver-cart-modal 
+			v-if="hasReceipent" 
+			:receipent-list="receipentList"
+			@set-recipient="setHomeDeliveryFormData"
+		></receiver-cart-modal>
+
+		<market-select-modal
+			:market-list="marketList"
+			@choose-market="setMarketType"
+			ref="marketModal"
+		></market-select-modal>
+
+		<cart-coupon-modal
+			:valid-coupon-url="apiUrl.valid_coupon"
+			@choose-ticket="chooseTicket"
+			ref="cartCoupoonModal"
+		></cart-coupon-modal>
+
+		<div class="modal fade" id="pickedTicketModal" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header justify-content-center">
+						<h2>您所選擇的折價券</h2>
+					</div>
+					<div class="p-0 modal-body">
+						<cart-coupon
+							v-for="ticket in pickedTicket"
+							:key="ticket.coupon_no"
+							:ticket="ticket"
+							@set-checked="setPickedTickChecked"
+						></cart-coupon>
+					</div>
+					<div class="modal-footer flex-column py-0">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="validatePopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ otherError.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="limit-popup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ limitedText }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<activity-product-modal :intro-info="introInfo"></activity-product-modal>
+
+		<app-download-modal></app-download-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script src="../dist/js/cart-page-component.js"></script>
+	<script type="module">
+		// import '../js/vue-component/CartRow/NormalCartRow.js'
+		// import '../js/vue-component/CartRow/ActivityCartRow.js'
+		// import '../js/vue-component/CartRow/LimitedCartRow.js'
+		// import '../js/vue-component/CartRow/AddOnCartRow.js'
+		// import '../js/vue-component/AddOnSlide/index.js'
+		// import '../js/vue-component/InvoiceItem/index.js'
+		// import '../js/vue-component/AddressField/index.js'
+		// import '../js/vue-component/PayItem/index.js'
+		// import '../js/vue-component/DeliveryItem/index.js'
+		// import '../js/vue-component/Modal/MarketSelectModal.js'
+		// import '../js/vue-component/Modal/CartCouponModal.js'
+		// import '../js/vue-component/Modal/ReceiverCartModal.js'
+		import app from '../js/page/normalCart/step1.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				cart: '/api/cart',
+				product_promotions: '/api/activity_cart/bundle',
+				limit_time: '/api/activity_cart/limit_time',
+				product_purchase: '/api/product_purchase',
+				cart_purchase: '/api/cart_purchase',
+				receipent: '/api/member/frequent_recipients',
+				payment: '/api/payments',
+				invoice: '/api/portal/order/invoice',
+				store_city: '/api/store_city',
+				stores: '/api/stores',
+				map: '/api/logistics/map',
+				mapReply: '/api/logistics/mapReply',
+				valid_coupon: '/api/valid_coupon',
+				check_barcode: '/api/ecpay/invoice/check_barcode'
+			},
+			pageUrl: {
+				login: './memberLogin.html',
+				productDetail: './allProductDetail.html',
+				cart_step2: './shopCartStep2.html',
+				limitedProductDetail: './eventLimitedTimeProductDetail.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

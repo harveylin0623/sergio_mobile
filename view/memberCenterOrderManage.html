@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>訂單管理</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">訂單管理</h2>
+				<div class="mb-3">
+					<div class="mb-2 search">
+						<input type="text" class="form-control" placeholder="訂單編號" v-model.trim="criteria.orderNumber">
+					</div>
+					<div class="mb-2 row">
+						<div class="col-6 pr-1">
+							<p class="title sm text-link">訂單狀態</p>
+							<select class="form-control" v-model.number="criteria.orderStatus">
+								<option value="-1">全部</option>
+								<option v-for="(value,key) in orderStatusList" :value="key">{{ value }}</option>
+							</select>
+						</div>
+						<div class="col-6 pl-1">
+							<p class="title sm text-link">付款狀態</p>
+							<select class="form-control" v-model.number="criteria.payStatus">
+								<option value="-1">全部</option>
+								<option v-for="(value,key) in payStatusList" :value="key">{{ value }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="mb-2">
+						<p class="mb-1 text-link title sm">搜尋日期</p>
+						<input type="text" id="dateInput" class="form-control">
+					</div>
+					<button class="w-100 btn btn-limeGreen" @click="searchHandler">搜尋</button>
+				</div>
+				<div>
+					<order-list-row
+						v-for="order in orderList"
+						:key="order.order_num"
+						:order-info="order"
+						@open-digital-map="openDigitalMap"
+						@cancel-order="openCancelPopup"
+						@return-order="returnOrder"
+						@buy-again="buyAgain"
+					></order-list-row>
+				</div>
+				<div class="my-3 text-center">
+					<button class="btn btn-outline-limeGreen limit" v-show="hasNextPage" @click="seeMore">
+						{{ buttonText }}
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="cancelPopup" data-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header mx-auto">
+            <h2>是否要取消訂單?</h2>
+          </div>
+          <div class="modal-footer flex-column">
+            <button class="btn btn-limeGreen limit mb-2" @click="cancelOrder">確認</button>
+            <button class="btn btn-outline-limeGreen limit" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/OrderRow/OrderListRow.js'
+		import app from '../js/page/member/common-order.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				order_list: '/api/order',
+				order_cancel: '/api/order_cancel',
+				order_buy_again: '/api/order_buy_again'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				orderManageDetail: './memberCenterOrderManageDetail.html',
+				orderRefund: './memberCenterOrderManageRefund.html',
+				orderPayRefund: './memberCenterOrderManagePayRefund.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

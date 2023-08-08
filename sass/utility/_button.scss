@@ -1,0 +1,44 @@
+%button {
+	width: var(--w, revert);
+	height: var(--h, 36px);
+	border-radius: map-get($radius, sm);
+	font-size: map-get($fontSize, sm, size);
+	&.disabled {
+		cursor: not-allowed;
+		opacity: 0.7;
+	}
+}
+
+//一般button
+@mixin normalBtn($obj) {
+	@extend %button;
+	$color: map-get($obj, color);
+	$bgColor: map-get($obj, bgColor);
+	$hoverColor: map-get($obj, hoverColor);
+	color: $color;
+	background-color: $bgColor;
+	border: 1px solid map-get($obj, bdColor);
+	&:hover {
+		color: $color;
+		background-color: $hoverColor;
+		border-color: $hoverColor;
+	}
+	&.disabled {
+		&:hover {
+			background-color: $bgColor;
+		}
+	}
+}
+
+//外框 button
+@mixin outlineBtn($obj) {
+	@extend %button;
+	$color: map-get($obj, color);
+	color: $color;
+	background-color: map-get($obj, bgColor);
+	border: 1px solid map-get($obj, bdColor);
+	&:hover {
+		color: $color;
+		background-color: rgba(#000, 0.2);
+	}
+}

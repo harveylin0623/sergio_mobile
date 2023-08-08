@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>限時限量-商品詳情</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div v-show="hasProductCode">
+				<div class="container">
+					<div class="mb-3">
+						<div class="mb-2 swiper swiper-container-M">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="(img,index) in specSlideList" :key="img">
+									<img :src="img" class="full-img" alt="">
+								</div>
+							</div>
+						</div>
+						<div class="swiper swiper-container-D">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="(img,index) in specSlideList" :key="img">
+									<img :src="img" class="full-img" alt="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="mb-0 title sm text-limeGreen">商品編號：{{ productInfo.num }}</div>
+						<h2 class="my-2" style="font-size:20px;">{{ productInfo.name }}</h2>
+						<div class="mb-2 text-link title sm">{{ productInfo.product_summary }}</div>
+						<div class="d-flex align-items-center mb-2" v-if="!noSpecialPrice">
+							<span class="mr-2">建議售價:</span>
+							<p class="origin-price line">${{ productInfo.product_price | currency }}元</p>
+						</div>
+						<div class="d-flex align-items-center mb-2">
+							<span class="mr-2">{{ specialPriceTitle }}:</span>
+							<p class="text-tomatoRed">${{ productInfo.product_promo_price | currency }}元</p>
+						</div>
+						<div class="d-flex align-items-center mb-2">
+							<span class="mr-2">活動時間:</span>
+							<div class="mb-0 p-1 bg-pink text-tomatoRed rounded title sm">{{ periodText }}</div>
+						</div>
+						<div class="d-flex align-items-center">
+							<span class="mr-2">活動數量:</span>
+							<div class="mb-0 p-1 bg-pink text-tomatoRed rounded title sm">{{ productInfo.activityStock }}</div>
+						</div>
+					</div>
+				</div>
+				<div class="my-3 py-1 bg-term"></div>
+				<div class="container">
+					<div class="mb-3" v-if="productInfo.valid">
+						<p class="mb-1">數量</p>
+						<div class="d-flex align-items-center">
+							<input-number
+								:max="productInfo.activityStock"
+								:count="user.buyCount"
+								@change-count="changeCount"
+							></input-number>
+							<p class="mb-0 ml-2 title sm">還剩{{ productInfo.activityStock }}件</p>
+						</div>
+					</div>
+					<div class="d-flex align-items-center mb-2">
+						<button 
+							class="flex-grow-1 flex-shrink-1 btn btn-outline-limeGreen w-50 mr-1"
+							:class="{disabled:!enableCartButton}"
+							@click="addCart(false)">
+							<i class="fal fa-shopping-bag"></i> 加入購物車
+						</button>
+						<button 
+							class="flex-grow-1 flex-shrink-1 btn btn-tomatoRed w-50 ml-1" 
+							:class="{disabled:!enableCartButton}" 
+							@click="addCart(true)"
+						>直接購買</button>
+					</div>
+					<div class="text-link" data-toggle="modal" data-target="#contactPopup">
+						<i class="fal fa-comment-dots mr-1 text-limeGreen"></i><u>聯絡客服</u>
+					</div>
+					<div class="mt-2">
+						<ul class="nav nav-tabs" id="myTab" role="tablist">
+							<li class="nav-item">
+								<a class="p-2 nav-link text-dark active" data-toggle="tab" href="#n1">商品說明</a>
+							</li>
+							<li class="nav-item">
+								<a class="p-2 nav-link text-dark" data-toggle="tab" href="#n2">活動說明</a>
+							</li>
+						</ul>
+						<div class="pt-2 tab-content">
+							<div id="n1" class="tab-pane fade show active edit-block" v-html="productInfo.product_detail"></div>
+							<div id="n2" class="tab-pane fade edit-block" v-html="productInfo.activityDetail"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<contact-modal
+			:product-info="productInfo"
+			:spec-img-url="specSlideList[0]"
+			@contact="contactHandler"
+			ref="contactModal"
+		></contact-modal>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="cartPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ cartInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<a :href="pageUrl.cart" class="btn btn-limeGreen mx-auto limit" v-if="cartInfo.isRedirect && cartInfo.status">確認</a>
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-else>確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/activity/limitTime-detail.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				online_service_create: '/api/online_service',
+				limited_time_meta: '/api/activity/limited_time_meta',
+				product_promotions_limit_time: '/api/activity_cart/limit_time'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				cart: './shopCartStep1.html',
+				eventList: './eventList.html',
+				eventLimitedTime: './eventLimitedTime.html',
+			}
+		})
+	</script>
+</body>
+
+</html>

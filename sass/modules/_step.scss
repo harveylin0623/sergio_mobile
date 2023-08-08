@@ -1,0 +1,87 @@
+.stepCnt {
+	@extend %centerFlex;
+	margin-bottom: 20px;
+	.sItem {
+		position: relative;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		.cube {
+			@include size(40px);
+			text-align: center;
+			line-height: 36px;
+			font-size: 18px;
+			font-weight: bold;
+			border: 2px solid #eee;
+			background-color: #eee;
+			border-radius: 50%;
+			color: #bbb;
+		}
+		.text {
+			font-size: 14px;
+			color: #ccc;
+		}
+		&.ing {
+			.cube {
+				border-color: map-get($basicColor, limeGreen);
+				background-color: #fff;
+				color: map-get($basicColor, limeGreen);
+			}
+			.text {
+				color: map-get($basicColor, limeGreen);
+			}
+		}
+		&.done {
+			.cube {
+				border-color: map-get($basicColor, limeGreen);
+				background-color: map-get($basicColor, limeGreen);
+				color: #ffffff;
+			}
+			.text {
+				color: map-get($basicColor, limeGreen);
+			}
+		}
+	}
+	.sLine {
+		@include size(80px, 3px);
+		margin: 0 -8px;
+		transform: translateY(-10px);
+		background-color: #eee;
+		&.active {
+			background-color: map-get($basicColor, limeGreen);
+		}
+	}
+	&.dot {
+		margin-left: 30px;
+		margin-right: 30px;
+		.cube {
+			@include size(20px);
+			border-width: 4px;
+			border-color: #888;
+			background-color: #fff !important;
+		}
+		.text {
+			position: absolute;
+			top: 30px;
+			left: 50%;
+			width: 60px;
+			margin: 0 0 0 -30px;
+			font-size: 15px;
+			text-align: center;
+			color: #666;
+		}
+		.sLine {
+			width: 140px;
+			background-color: #ccc;
+			&.active {
+				background-color: map-get($basicColor, limeGreen);
+			}
+		}
+	}
+	&.sm {
+		.sLine {
+			width: 70px;
+			margin: 0;
+		}
+	}
+}

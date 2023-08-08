@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>我的票券</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">我的票券</h2>
+				<rounded-fill-tab 
+					:tab-type="currentTabType" 
+					:tab-list="tabList"
+					@change-tab="changeTab"
+				></rounded-fill-tab>
+				<div class="mt-3">
+					<div v-if="hasTabContent">
+						<div v-show="currentTabType === 'valid'">
+							<member-coupon
+								v-for="coupon in tabContent.valid.list"
+								:key="coupon.coupon_no"
+								:coupon="coupon"
+								@intro-coupon="introCoupon"
+							></member-coupon>
+						</div>
+						<div v-show="currentTabType === 'invalid'">
+							<member-coupon
+								v-for="coupon in tabContent.invalid.list"
+								:key="coupon.coupon_no"
+								:coupon="coupon"
+								@intro-coupon="introCoupon"
+							></member-coupon>
+						</div>
+					</div>
+					<div class="my-3 text-center" v-show="displaySeeMore">
+						<button class="btn btn-outline-limeGreen limit" @click="seeMore">{{ buttonText }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="couponPopup" data-backdrop="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>票券介紹</h2>
+					</div>
+					<div class="p-0 modal-body">
+						<div class="mb-2 rounded bd-divide">
+							<div class="d-flex align-items-start">
+								<div class="flex-grow-0 flex-shrink-0 rounded-0" style="width:100px;height:100px;">
+									<img :src="introInfo.image" class="full-img" alt="">
+								</div>
+								<div class="p-2 flex-grow-1 flex-shrink-1">
+									<div class="mb-1 title sm ellipsis">{{ introInfo.title }}</div>
+									<div class="mb-1 title sm text-link">{{ introInfo.duration }}</div>
+									<div class="mb-0 title sm text-link">
+										可用次數：<span class="text-tomatoRed">{{ introInfo.total }}</span>次
+									</div>
+								</div>
+							</div>
+						</div>
+						<div>
+							<p class="mb-1">優惠內容</p>
+							<div class="mb-0 title sm text-link edit-block" v-html="introInfo.content"></div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/TabControl/index.js'
+		import '../js/vue-component/Coupon/MemberCoupon.js'
+		import app from '../js/page/member/ticket.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				coupon_list: '/api/third_party_member/coupon_list',
+				coupon_information: '/api/third_party_member/coupon_information',
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

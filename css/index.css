@@ -1,0 +1,14 @@
+#banner-swiper .swiper-pagination-bullet {
+  border-radius: 4px;
+  transition: width 0.25s;
+}
+#banner-swiper .swiper-pagination-bullet.swiper-pagination-bullet-active {
+  width: 20px;
+}
+
+.category-circle {
+  width: 85px;
+}
+.category-circle > .img-box {
+  height: 85px;
+}/*# sourceMappingURL=index.css.map */

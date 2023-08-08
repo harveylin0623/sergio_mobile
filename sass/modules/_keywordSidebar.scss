@@ -1,0 +1,54 @@
+#keywordSidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  @include size(100%, 100vh);
+  background-color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 1001;
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  >.keyword-header {
+    padding: 12px 0;
+    box-shadow: map-get($shadow, header);
+    .fa-times {
+      font-size: 30px;
+    }
+    .logo-bg {
+      @include size(72.28px, 28.57px);
+      background-image: url("../img/knn-logo.jpg");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+    .logo-title {
+      font-size: 20px;
+    }
+  }
+  >.search-block {
+    input {
+      flex: 1;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: 17px;
+      border-bottom-left-radius: 17px;
+    }
+    button {
+      flex: 0 0 80px;
+      border-top-right-radius: 17px;
+      border-bottom-right-radius: 17px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+  >.lists-block {
+    height: calc(100vh - 56px - 70px - 32px);
+    .keyword-item {
+      white-space: nowrap;
+    }
+  }
+}

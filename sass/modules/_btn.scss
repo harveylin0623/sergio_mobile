@@ -1,0 +1,45 @@
+$normalMap: (
+	a: (
+		color: map-get($basicColor, neutral-7),
+		bgColor: map-get($basicColor, primary-1),
+		bdColor: map-get($basicColor, primary-1),
+		hoverColor: #534554
+	),
+	b: (
+		color: map-get($basicColor, neutral-7),
+		bgColor: map-get($basicColor, wrong),
+		bdColor: map-get($basicColor, wrong),
+		hoverColor: #a52931
+	),
+	c: (
+		color: map-get($basicColor, neutral-2),
+		bgColor: map-get($basicColor, neutral-4),
+		bdColor: map-get($basicColor, neutral-4),
+		hoverColor: map-get($basicColor, neutral-4),
+	)
+);
+
+$outlineMap: (
+	a: (
+		color: map-get($basicColor, primary-1),
+		bgColor: map-get($basicColor, neutral-7),
+		bdColor: map-get($basicColor, primary-1),
+	),
+	b: (
+		color: map-get($basicColor, wrong),
+		bgColor: map-get($basicColor, neutral-7),
+		bdColor: map-get($basicColor, wrong),
+	),
+);
+
+@each $key, $obj in $normalMap {
+	.btn-#{"" + $key} {
+		@include normalBtn($obj);
+	}
+}
+
+@each $key, $obj in $outlineMap {
+	.btn-outline-#{"" + $key} {
+		@include outlineBtn($obj);
+	}
+}

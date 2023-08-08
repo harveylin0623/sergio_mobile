@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>會員資料</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">會員資料</h2>
+				<validation-observer tag="div" ref="form">
+					<div class="mb-2 form-group">
+						<label class="title sm" for="">帳號</label>
+						<div class="button-input-group">
+							<input type="text" class="form-control" v-model="user.mobile" disabled>
+							<a :href="pageUrl.changeMobile_step1" class="btn btn-limeGreen">修改</a>
+						</div>
+					</div>
+					<validation-provider tag="div" class="mb-2 form-group" rules="required" v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>姓名
+						</label>
+						<input type="text" class="form-control" placeholder="請輸入您的中文或英文姓名" v-model.trim="user.name"/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<validation-provider tag="div" class="mb-2 form-group" rules="required" v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>性別
+						</label>
+						<select class="form-control" v-model="user.gender">
+							<option value="">請選擇</option>
+							<option v-for="gender in genderList" :key="gender.value" :value="gender.value">
+								{{ gender.title }}
+							</option>
+						</select>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<validation-provider tag="div" class="mb-2 form-group" rules="required|email"
+						v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>電子信箱
+						</label>
+						<input type="email" class="form-control" placeholder="請輸入電子信箱" v-model.trim="user.email"/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<div class="mb-2" v-if="hasBirthday">
+						<p class="title sm"><span class="text-tomatoRed">*</span> 出生日期</p>
+						<input type="text" class="form-control" v-model="birthdayText" disabled>
+					</div>
+					<div class="mb-2" v-if="!hasBirthday">
+						<p class="title sm"><span class="text-tomatoRed">*</span> 出生日期</p>
+						<div class="row">
+							<div class="pr-1 col-6">
+								<select class="form-control" v-model="userBirthday.year">
+									<option v-for="year in yearList" :key="year.value" :value="year.value">{{ year.text }}</option>
+								</select>
+							</div>
+							<div class="pl-1 col-6">
+								<select class="form-control" v-model="userBirthday.month">
+									<option v-for="month in monthList" :key="month.value" :value="month.value">{{ month.text }}</option>
+								</select>
+							</div>
+							<p class="col-12 error-msg" v-show="!birthdayIsValid">必須大於7歲</p>
+						</div>
+					</div>
+					<validation-provider tag="div" class="mb-2 form-group" rules="mobile-vehicle" v-slot="{ errors,failed }">
+						<label class="title sm" for="">手機載具</label>
+						<input type="text" class="form-control" placeholder="請輸入手機載具" v-model.trim="user.einvoice_carrier_no"/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<div class="mb-2 form-row">
+						<div class="pr-1 mb-2 form-group col-6">
+							<label class="title sm" for="">通訊地址</label>
+							<select class="form-control" v-model="addressInfo.city">
+								<option value="">請選擇</option>
+								<option v-for="(city,index) in cityList" :key="index" :value="city">{{ city }}</option>
+							</select>
+						</div>
+						<div class="pl-1 mb-2 form-group col-6">
+							<label class="title sm" for="">&nbsp;</label>
+							<select class="form-control" v-model="addressInfo.district">
+								<option value="">請選擇</option>
+								<option v-for="(district,index) in districtList" :key:="index" :value="district.name">
+									{{ district.name }}
+								</option>
+							</select>
+						</div>
+						<div class="mb-0 form-group col-12">
+							<input type="text" class="form-control" placeholder="詳細地址" v-model.trim="addressInfo.road"/>
+						</div>
+					</div>
+					<validation-provider tag="div" class="mb-2 form-group" rules="required" v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>安全問題
+						</label>
+						<select class="form-control" v-model="user.security_question">
+							<option value="" disabled>請選擇</option>
+							<option v-for="question in questionList" :key="question.value" :value="question.value">
+								{{ question.title }}
+							</option>
+						</select>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<validation-provider tag="div" class="mb-2 form-group" rules="required"
+						v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>安全問題答案
+						</label>
+						<input type="text" class="form-control" placeholder="請輸入答案" v-model.trim="user.security_answer"/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<div class="my-3">
+						<button class="w-100 btn btn-limeGreen" @click="submitHandler">確認修改</button>
+					</div>
+				</validation-observer>
+			</div>
+		</div>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2 class="modal-title text-center">提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/member/profile.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				member_profile: '/api/third_party_member/profile',
+				member_summary: '/api/third_party_member/summary',
+				point_information: '/api/third_party_member/point_information',
+				check_barcode: '/api/ecpay/invoice/check_barcode'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				changeMobile_step1: './memberCenterProfileChangePhoneStep1.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

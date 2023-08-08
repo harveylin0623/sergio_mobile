@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>商品分類</title>
+	<link rel="preload" as="image" href="../img/empty.jpg" id="product-preload-image">
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar
+			:main-id="filterCriteria.mainId"
+			:category-api-url="apiUrl.product_category"
+			action-type="search"
+			@search-category="updateMainCategory"
+		></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<sub-category-sidebar
+			:is-open.sync="subCategoryIsOpen"
+			:sub-category-list="subCategoryList"
+			:sub-id="filterCriteria.subId"
+			:last-id="filterCriteria.lastId"
+			@update-sub-category="updateSubCategory"
+			@update-last-category="updateLastCategory"
+		></sub-category-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">
+					<span>{{ filterCriteria.categoryName }}</span>
+					<i class="fal fa-chevron-circle-down text-limeGreen" @click="openSubCategory"></i>
+				</h2>
+				<div class="row mb-4">
+					<div class="col-12 mb-2 input-group">
+						<input type="text" class="form-control" placeholder="搜尋" v-model.trim="filterCriteria.keyword"/>
+					</div>
+					<div class="col-6 pr-1 input-group">
+						<select class="custom-select rounded" v-model="filterCriteria.order_time">
+							<option value="">上架時間:未排序</option>
+							<option value="asc">上架時間:舊到新</option>
+							<option value="desc">上架時間:新到舊</option>
+						</select>
+					</div>
+					<div class="col-6 pl-1 input-group">
+						<select class="custom-select pr-0 rounded" v-model="filterCriteria.order_price">
+							<option value="">價格:未排序</option>
+							<option value="asc">價格:低到高</option>
+							<option value="desc">價格:高到低</option>
+						</select>
+					</div>
+					<div class="col-12 mt-2">
+						<button class="w-100 btn btn-limeGreen" @click="filterHandler">搜尋</button>
+					</div>
+				</div>
+				<div class="row">
+					<product-popular 
+						v-for="product in productList" 
+						:key="product.product_code"
+						:product-info="product">
+					</product-popular>
+				</div>
+				<div>
+					<product-pagination
+						:current-page="paginationInfo.currentPage"
+						:total-page="paginationInfo.totalPage"
+						@pag-change="paginationChange"
+					></product-pagination>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+	</div>
+
+
+	<script type="module">
+		import '../js/vue-component/CategorySidebar/sub.js'
+		import '../js/vue-component/CategorySidebar/subCategoryItem.js'
+		import '../js/vue-component/CategorySidebar/lastCategoryItem.js'
+		import app from '../js/page/product/category.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				product: '/api/product'
+			},
+			pageUrl: {
+				home: './home.html',
+				productCategory: './allProduct.html',
+				productDetail: './allProductDetail.html'
+			}
+		})
+	</script>
+
+</body>
+
+</html>

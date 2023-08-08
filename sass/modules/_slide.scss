@@ -1,0 +1,45 @@
+.swiper {
+	position: relative;
+	overflow: hidden;
+	&.swiper-container-D {
+		.swiper-slide {
+			border: 2px solid transparent;
+			cursor: pointer;
+			&.swiper-slide-thumb-active {
+				border-color: map-get($basicColor, tomatoRed);
+			}
+		}
+	}
+	.swiper-slide {
+		a {
+			display: block;
+			img {
+				display: block;
+				@include size(100%, auto);
+				object-fit: cover;
+			}
+		}
+	}
+	.swiper-button-next,
+	.swiper-button-prev {
+		@include size(30px);
+		line-height: 30px;
+		font-size: 18px;
+		color: #fff;
+		background: none;
+		background-color: rgba(0, 0, 0, 0.4);
+		text-align: center;
+		&::after {
+			content: "";
+		}
+		&.hide {
+			display: none;
+		}
+	}
+	.swiper-button-next {
+		right: 0;
+	}
+	.swiper-button-prev {
+		left: 0;
+	}
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>聯絡我們管理(詳情)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">聯絡我們詳情</h2>
+				<template v-if="hasContactInfo">
+					<h3 class="mb-2">客服主旨: {{ contactInfo.title }}</h3>
+					<div>
+						<dialogue-item
+							v-for="dialogue in contactInfo.messages"
+							:key="dialogue.id"
+							:dialogue="dialogue"
+						></dialogue-item>
+					</div>
+				</template>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/DialogueItem/index.js'
+		import app from '../js/page/member/contact-manage-detail.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				contact_us: '/api/contact_us',
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				contactUsManage: './memberCenterContactUsManage.html'
+			}
+		})
+	</script>
+
+</body>
+
+</html>

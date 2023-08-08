@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>尾款購物車(2)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">購物車</h2>
+				
+				<div class="stepCnt sm">
+					<div class="sItem done">
+						<div class="cube">1</div>
+						<div class="text">購物車</div>
+					</div>
+					<div class="sLine active"></div>
+					<div class="sItem ing">
+						<div class="cube">2</div>
+						<div class="text">訂單確認</div>
+					</div>
+					<div class="sLine"></div>
+					<div class="sItem">
+						<div class="cube">3</div>
+						<div class="text">完成訂單</div>
+					</div>
+				</div>
+
+				<div class="rounded bd-limeGreen" v-if="apiIsReady">
+					<div class="bg-mintGreen cart-table-head">訂單內容</div>
+					<div>
+						<preorder-settled-row
+							v-for="cart in cartList"
+							:key="cart.uid"
+							:cart-info="cart"
+							:is-deposit="true"
+						></preorder-settled-row>	
+					</div>
+					<div class="bg-mintGreen cart-table-head">加購商品</div>
+					<div>
+						<add-on-balance-settled-row
+							v-for="addOn in addOnList" 
+							:key="addOn.id" 
+							:cart-info="addOn"
+						></add-on-balance-settled-row>
+					</div>
+					<div class="d-flex justify-content-between align-items-center pb-0 cart-table-subtotal">
+						<p class="mb-0 title sm">尾款金額</p>
+						<p class="text-tomatoRed subtotal">${{ billInfo.total_amount | currency }}</p>
+					</div>
+					<div class="d-flex justify-content-between align-items-center pb-0 cart-table-subtotal">
+						<p class="mb-0 title sm">運費小計</p>
+						<p>${{ billInfo.logistics_fee | currency }}</p>
+					</div>
+					<div class="d-flex justify-content-between align-items-center pb-0 cart-table-subtotal" v-for="coupon in couponList" :key="coupon.coupon_no">
+						<p class="mb-0 title sm">優惠票券: {{ coupon.title }}</p>
+						<p>-${{ coupon.discount | currency }}</p>
+					</div>
+					<div class="d-flex justify-content-between align-items-center cart-table-subtotal">
+						<p class="mb-0 title sm">結帳總金額</p>
+						<p class="text-tomatoRed subtotal">${{ billInfo.money_total | currency }}</p>
+					</div>
+				</div>
+
+			</div>
+
+			<template v-if="apiIsReady">
+				<div class="my-3 pt-2 bg-term"></div>
+
+				<div class="container">
+					<div class="px-2 py-3 mb-2 rounded bd-limeGreen">
+						<h3 class="mb-2">付款方式</h3>
+						<p class="title sm mb-0">{{ paymentName }}</p>
+					</div>
+					<div class="px-2 py-3 mb-2 rounded bd-limeGreen">
+						<div class="mb-3">
+							<h3 class="mb-2">配送方式</h3>
+							<p class="title sm mb-0">
+								<span v-show="marketName !== ''">{{ marketName }}</span>
+								<span>{{ deliveryName }}</span>
+							</p>
+						</div>
+						<div>
+							<div class="mb-3" v-show="deliveryType === 'HOME'">
+								<h3 class="mb-2">訂購人資訊</h3>
+								<div class="title sm mb-2">姓名: {{ orderer.name }}</div>
+								<div class="title sm mb-2">電子信箱: {{ orderer.email }}</div>
+								<div class="title sm mb-2">住宅電話: {{ orderer.tel }}</div>
+								<div class="title sm mb-2">手機號碼: {{ orderer.mobile }}</div>
+								<div class="title sm mb-0">寄送地址: {{ startingPoint }}</div>
+							</div>
+							<div>
+								<h3 class="mb-2">收件人資訊</h3>
+								<div class="title sm mb-2">姓名: {{ receiver.name }}</div>
+								<div class="title sm mb-2">電子信箱: {{ receiver.email }}</div>
+								<div class="title sm mb-2">住宅電話: {{ receiver.tel }}</div>
+								<div class="title sm mb-2">手機號碼: {{ receiver.mobile }}</div>
+								<div class="title sm mb-2">寄送地址: {{ destination }}</div>
+								<div class="title sm mb-0">備註: {{ receiver.remark }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="px-2 py-3 mb-3 rounded bd-limeGreen">
+						<h3 class="mb-2">發票資訊</h3>
+						<p class="title sm mb-0">{{ invoiceName }}: {{ invoiceValue }}</p>
+					</div>
+					<div>
+						<h3 class="mb-2">注意事項</h3>
+						<ul class="pl-4 psText" v-html="warningText"></ul>
+					</div>
+					<hr>
+					<div class="d-flex justify-content-end align-items-center mb-3">
+						<a :href="backPageUrl" class="btn btn-outline-tomatoRed limit">返回前頁</a>
+						<button class="ml-1 btn btn-tomatoRed limit" @click="createOrder('preorder')">確認結帳</button>
+					</div>
+				</div>
+			</template>
+
+		</div>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<a :href="backPageUrl" class="btn btn-limeGreen mx-auto limit">確認</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="orderPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ orderTip.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<div class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="productFilterPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<ol :style="olListStyle">
+							<li v-for="(obj, key) in cartErrorInfo" :key="key" class="text-tomatoRed mb-2" v-show="obj.status">{{ obj.text }}</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<div class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script src="../dist/js/cart-page-component.js"></script>
+	<script type="module">
+		import app from '../js/page/balanceCart/step2.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				cart_calculate: '/api/preorder/cart/final_payment_calculate',
+				order_create: '/api/preorder/order/final_payment',
+				order_status: '/api/preorder/order/status'
+			},
+			pageUrl: {
+				login: './memberLogin.html',
+				cart_step1: './preorderBalanceCartStep1.html',
+				cart_step3: './shopCartStep3.html',
+			}
+		})
+	</script>
+
+</body>
+
+</html>

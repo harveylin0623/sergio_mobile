@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>最新消息文章列表</title>
+	<link rel="preload" as="image" href="../img/empty.jpg" id="product-preload-image">
+	<link rel="preload" as="image" href="../img/banner-empty.jpg" id="banner-preload-image">
+	<link rel="preload" as="image" href="../img/advertise-empty.jpg" id="ad-preload-image">
+	<link rel="preload" as="image" href="../img/popular-empty.jpg" id="popular-preload-image">
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">文章列表</h2>
+				<div class="d-flex justify-content-center align-items-center mb-3">
+					<input 
+						type="text" 
+						class="flex-grow-1 flex-shrink-1 form-control" 
+						placeholder="搜尋文章"
+						style="border-top-right-radius:0px;border-bottom-right-radius:0px;"
+						v-model.trim="criteria.input">
+					<button 
+						class="flex-grow-0 flex-shrink-0 btn btn-limeGreen" 
+						style="width:70px;height:38px;border-top-left-radius:0px;border-bottom-left-radius:0px;"
+						@click="searchHandler"
+					>搜尋</button>
+				</div>
+				<div class="mb-2">
+					<p class="mb-0 title sm">
+						共<span class="mx-1 text-tomatoRed">{{ criteria.totalNews }}</span>個結果
+					</p>
+				</div>
+				<div>
+					<news-item
+						v-for="news in newsItems"
+						:key="news.id"
+						:news="news"
+					></news-item>
+				</div>
+				<div class="my-3 text-center" v-show="hasNextPage">
+					<button class="btn btn-outline-limeGreen limit" @click="seeMore">{{ buttonText }}</button>
+				</div>
+				<div class="mb-3" v-show="hasPopularNews">
+					<h3 class="mb-2 font-weight-bold">熱門文章</h3>
+					<div>
+						<lazy-news
+							:news-list="newsPopular"
+							root-margin="200px 200px 200px 200px"
+						></lazy-news>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/news/list.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				news: '/api/news',
+				news_popular: '/api/news_popular'
+			},
+			pageUrl: {
+				home: './home.html',
+				newsDetail: './articlesSingle.html',
+			}
+		})
+	</script>
+</body>
+
+</html>

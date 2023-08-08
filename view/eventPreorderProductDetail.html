@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>預購商品詳情</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../js/src/api/config.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div v-show="hasProductCode">
+				<div class="container">
+					<div class="mb-3">
+						<div class="mb-2 swiper swiper-container-M">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="(img,index) in specSlideList" :key="img">
+									<img :src="img" class="full-img" alt="">
+								</div>
+							</div>
+						</div>
+						<div class="swiper swiper-container-D">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="(img,index) in specSlideList" :key="img">
+									<img :src="img" class="full-img" alt="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="mb-0 title sm text-limeGreen">
+              <span class="py-1 px-2 bg-moBlue text-white rounded">預購</span>
+              <span>商品編號：{{ productInfo.num }}</span>
+            </div>
+						<h2 class="my-2" style="font-size:20px;">{{ productInfo.name }}</h2>
+						<div class="mb-2 title sm text-link">{{ productInfo.product_summary }}</div>
+						<div class="d-flex align-items-center">
+							<h3 class="mr-2">{{ depositText }}:</h3>
+							<h3 class="text-tomatoRed">${{ productInfo.product_promo_price | currency }}元</h3>
+						</div>
+					</div>
+				</div>
+
+				<div class="my-3 py-1 bg-term"></div>
+
+				<div class="container">
+					<div class="mb-2 d-flex align-items-center">
+						<p class="mr-2">規格:</p>
+						<p>{{ productInfo.specTitle }}</p>
+					</div>
+					<div v-if="hasSpecStock" class="mb-3 d-flex align-items-center">
+						<p class="mr-2">數量:</p>
+						<div class="d-flex align-items-center">
+							<input-number 
+								:max="productInfo.activityStock" 
+								:count="user.count"
+								@change-count="changeCount"
+							></input-number>
+							<p class="mb-0 ml-2 title sm">還剩{{ productInfo.activityStock }}件</p>
+						</div>
+					</div>
+					<div>
+						<div class="d-flex align-items-center">
+							<button 
+                class="w-100 btn btn-tomatoRed" 
+                :class="{disabled:!hasSpecStock}"
+                @click="buyHandler"
+                >現在預購</button>
+						</div>
+						<div class="mt-2 text-secondary" data-toggle="modal" data-target="#contactPopup">
+							<p>
+								<i class="fal fa-comment-dots text-limeGreen"></i> <u>聯絡客服</u>
+							</p>
+						</div>
+						<hr>
+						<div class="d-flex align-items-center title sm mb-1">
+							<p class="mr-1">地點:</p>
+							<p>{{ locationText }}</p>
+						</div>
+						<div class="d-flex align-items-center title sm mb-1">
+							<p class="mr-1">退貨類型:</p>
+							<p>{{ returnGoodsText }}</p>
+						</div>
+            <div class="d-flex align-items-center title sm">
+							<p class="mr-1">預購說明:</p>
+							<p>{{ productInfo.activity_summary }}</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="my-3 py-1 bg-term"></div>
+
+				<div class="mb-3 container">
+					<div>
+						<h2 class="mb-2" style="font-size:20px;">商品詳細介紹</h2>
+						<div class="edit-block" v-html="productInfo.product_detail"></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<contact-modal
+			:product-info="productInfo"
+			:spec-img-url="specSlideList[0]"
+			@contact="contactHandler"
+			ref="contactModal"
+		></contact-modal>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="cartPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ cartInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+	</div>
+
+	<script type="module">
+		import app from '../js/page/activity/preorder-detail.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				product_detail: '/api/product_detail',
+				product_recommend: '/api/product_recommend',
+				online_service_create: '/api/online_service',
+				preorder_meta: '/api/activity/preorder_meta',
+				preorder: '/api/activity_cart/preorder'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				eventList: './eventList.html',
+        cart: './preorderShopCartStep1.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

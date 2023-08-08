@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>商品詳情</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../js/src/api/config.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div v-show="hasProductCode">
+				<div class="container">
+					<div class="mb-3">
+						<div class="mb-2 swiper swiper-container-M">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="(img,index) in specSlideList" :key="img">
+									<img :src="img" class="full-img" alt="">
+								</div>
+							</div>
+						</div>
+						<div class="swiper swiper-container-D">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="(img,index) in specSlideList" :key="img">
+									<img :src="img" class="full-img" alt="">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="mb-0 title sm text-limeGreen">商品編號：{{ productInfo.num }}</div>
+						<h2 class="my-2" style="font-size:20px;">{{ productInfo.name }}</h2>
+						<div class="mb-2 title sm text-link">{{ productInfo.summary }}</div>
+						<div class="d-flex align-items-center mb-2" v-if="!noSpecialPrice">
+							<span class="mr-2">建議售價:</span>
+							<p class="origin-price line">${{ productInfo.product_price | currency }}元</p>
+						</div>
+						<div class="d-flex align-items-center">
+							<span class="mr-2">{{ specialPriceTitle }}:</span>
+							<p class="text-tomatoRed">${{ productInfo.product_promo_price | currency }}元</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="my-3 py-1 bg-term"></div>
+
+				<div class="container">
+					<div class="mb-1">
+						<p class="mb-1">規格</p>
+						<div class="btnGroup">
+							<spec-item
+								v-for="spec in specItems"
+								:key="spec.id" 
+								:spec="spec"
+								:current-spec-id="user.specId" 
+								@change-spec="changeSpec"
+							></spec-item>
+						</div>
+					</div>
+					<div class="mb-3" v-if="canAddToCart">
+						<p class="mb-1">數量</p>
+						<div class="d-flex align-items-center">
+							<input-number 
+								:max="user.total" 
+								:count="user.count"
+								@change-count="changeCount"
+							></input-number>
+							<p class="mb-0 ml-2 title sm">還剩{{ user.total }}件</p>
+						</div>
+					</div>
+					<div>
+						<div class="d-flex align-items-center" v-if="!displayGoodsNotify">
+							<button 
+								class="flex-grow-1 flex-shrink-1 w-50 mr-1 btn btn-outline-limeGreen" 
+								:class="{disabled:!canAddToCart}" 
+								@click="addCart(false)">
+								<i class="fal fa-shopping-bag"></i> 加入購物車
+							</button>
+							<button 
+								class="flex-grow-1 flex-shrink-1 w-50 ml-1 btn btn-tomatoRed" 
+								:class="{disabled:!canAddToCart}" 
+								@click="addCart(true)"
+							>直接購買</button>
+						</div>
+						<div v-else>
+							<button class="w-100 btn btn-outline-limeGreen" @click="notifyWhenHashGood">到貨通知</button>
+						</div>
+						<div class="mt-2 text-secondary" data-toggle="modal" data-target="#contactPopup">
+							<p>
+								<i class="fal fa-comment-dots text-limeGreen"></i> <u>聯絡客服</u>
+							</p>
+						</div>
+						<hr>
+						<div class="mb-1">
+							<p class="mb-1">付款方式:</p>
+							<p class="mb-0 text-link title sm">{{ paymentMethodText }}</p>
+						</div>
+						<div>
+							<p class="mb-1">配送方式:</p>
+							<p class="mb-0 text-link title sm">{{ logisticsMethodText }}</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="my-3 py-1 bg-term"></div>
+
+				<div class="mb-3 container">
+					<div v-show="hasDetail">
+						<h2 class="mb-2" style="font-size:20px;">商品詳細介紹</h2>
+						<div class="edit-block"  v-html="productInfo.detail"></div>
+					</div>
+				</div>
+
+				<div class="mb-3 container" v-show="hasRecommend">
+					<h2 class="mb-2 font-weight-bold" style="font-size:20px;">推薦商品</h2>
+					<div class="addOnProd">
+						<div class="swiper recommend-swiper">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide" v-for="item in recommendList" :key="item.id">
+									<a :href="item.linkUrl">
+										<div class="position-relative" style="padding-top:100%;">
+											<img :src="item.main_image" class="position-absolute full-img" style="left:0;top:0;" alt="" />
+										</div>
+										<div class="pt-2">
+											<div class="text-dark title sm ellipsis">{{ item.product_name }}</div>
+											<div class="mb-0 text-center text-tomatoRed title sm">
+												${{ item.product_promo_price | currency }}
+											</div>
+										</div>
+									</a>
+								</div>
+							</div>
+							<div class="swiper-button-next">
+								<i class="fal fa-arrow-right"></i>
+							</div>
+							<div class="swiper-button-prev">
+								<i class="fal fa-arrow-left"></i>
+							</div>			
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<contact-modal
+			:product-info="productInfo"
+			:spec-img-url="specSlideList[0]"
+			@contact="contactHandler"
+			ref="contactModal"
+		></contact-modal>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="cartPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ cartInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<a :href="pageUrl.cart" class="btn btn-limeGreen mx-auto limit" v-if="cartInfo.isRedirect && cartInfo.status">確認</a>
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-else>確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/SpecItem/index.js'
+		import app from '../js/page/product/detail.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				product_detail: '/api/product_detail',
+				product_recommend: '/api/product_recommend',
+				online_service_create: '/api/online_service',
+				addCart: '/api/cart',
+				product_arrival_notify: '/api/product_arrival_notify'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				productCategoty: './allProduct.html',
+				productDetail: './allProductDetail.html',
+				cart: './shopCartStep1.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

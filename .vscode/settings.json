@@ -1,0 +1,28 @@
+{
+  "liveSassCompile.settings.excludeList": [
+		"/**/node_modules/**", "/.vscode/**" 
+	],
+  "liveSassCompile.settings.generateMap": true,
+  "liveSassCompile.settings.formats": [
+		{
+			"format": "expanded",
+			"extensionName": ".css",
+			"savePath": "/css"
+		}
+	],
+	"liveSassCompile.settings.autoprefix": [
+		"> 1%",
+		"last 1 versions"
+	],
+  "liveServer.settings.CustomBrowser": "chrome",
+  "liveServer.settings.host": "localhost",
+  "liveServer.settings.port": 5503,
+  "editor.tabSize": 2,
+  "editor.rulers": [
+		105
+	],
+  "editor.wordWrapColumn": 105,
+	"html.format.wrapLineLength": 105,
+	"editor.wordWrap": "wordWrapColumn",
+  "editor.wrappingIndent": "indent",
+}

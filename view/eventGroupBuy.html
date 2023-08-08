@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>集殺活動</title>
+	<link rel="preload" as="image" href="../img/empty.jpg" id="product-preload-image">
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<activity-sidebar 
+			activity-type="group_buy"
+			:page-url="pageUrl.eventList"
+			:is-open.sync="activityMenuIsOpen"
+		></activity-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">
+					<span>集殺活動</span> 
+					<i class="fal fa-chevron-circle-down text-limeGreen" @click="toggleActivityMenu"></i>
+				</h2>
+				<template v-if="condition.show">
+					<div class="position-relative mb-2" style="padding-top:33.33%">
+						<img class="position-absolute full-img" :src="condition.imgUrl" style="left:0;top:0;" alt="">
+					</div>
+					<div class="mb-2">
+						<p class="mb-1">活動名稱: {{ activityIntro.title }}</p>
+						<p class="mb-0 text-break title sm text-link">活動說明: {{ activityIntro.summary }}</p>
+					</div>
+					<div class="row">
+						<group-buy-product
+              v-for="product in productLists"
+              :key="product.id"
+              :detail="product"
+            ></group-buy-product>
+					</div>
+					<div>
+						<product-pagination
+							:current-page="paginationInfo.currentPage"
+							:total-page="paginationInfo.totalPage"
+							@pag-change="paginationChange"
+						></product-pagination>
+					</div>
+				</template>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/activity/groupBuy.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+        groupbuy: '/api/activity/groupbuy',
+				groupbuy_meta: '/api/activity/groupbuy_meta'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				eventList: './eventList.html',
+        groupBuyDetail: './eventGroupBuyDetail.html'
+			}
+		})
+	</script>
+
+</body>
+
+</html>

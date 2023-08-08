@@ -1,0 +1,47 @@
+#loading-backdrop {
+	position: fixed;
+	left: 0;
+	top: 0;
+	@include size(100%);
+	background-color: rgba(#000, 0.6);
+	z-index: 1500;
+	>.svg-wrapper {
+		@extend %posCenter;
+		@include size(150px);
+		animation: spin 2s linear infinite;
+		.shape {
+			animation: spinner 2.1s linear infinite;
+			fill: transparent;
+			stroke: map-get($basicColor, limeGreen);
+			stroke-dasharray: 0 565;
+			stroke-dashoffset: 0;
+			stroke-width: 5px;
+		}
+	}
+}
+
+@keyframes spinner {
+	0% {
+		stroke-dasharray: 0 439;
+	}
+	
+	50% {
+		stroke-dasharray: 439 439;
+		stroke-dashoffset: 0;
+	}
+	
+	100% {
+		stroke-dasharray: 0 439;
+		stroke-dashoffset: -420;
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+	
+	100% {
+		transform: translate(-50%, -50%) rotate(720deg);
+	}
+}

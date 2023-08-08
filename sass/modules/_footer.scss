@@ -1,0 +1,38 @@
+#my-footer {
+	padding: 15px 0;
+	background-color: #3f3f3f;
+	.footer-accordion {
+		.accordion-header {
+			border-bottom: 1px solid #4e4e4e;
+		}
+		.accordion-content {
+			// font-size: 14px;
+			>a {
+				color: #828282;
+				&:last-child {
+					margin-bottom: 0 !important;
+				}
+			}
+		}
+	}
+	.qrcode-bg {
+		@include size(90px);
+		background-image: url("../img/knn-qrcode.png");
+		background-size: contain;
+	}
+	.apple-store {
+		@include size(115px, 41px);
+		background-image: url("../img/apple.png");
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
+	.android-store {
+		@include size(115px, 41px);
+		background-image: url("../img/android.png");
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
+	.copyright {
+		font-size: 12px;
+	}
+}

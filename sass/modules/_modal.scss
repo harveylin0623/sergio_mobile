@@ -1,0 +1,37 @@
+.modal {
+	.modal-content {
+		padding: 15px;
+		.modal-header,
+		.modal-footer,
+		.modal-body {
+			border: none;
+		}
+		.modal-title {
+			font-size: 22px;
+		}
+		.modal-body {
+			font-size: 16px;
+			word-break: break-all;
+		}
+	}
+	&.appDownloadPopup {
+		.qrcode {
+			@include size(180px);
+			background-image: url("../img/knn-qrcode.png");
+			background-position: center center;
+			background-size: contain;
+		}
+	}
+	&.receiver {
+		.modal-body {
+			max-width: 100%;
+		}
+	}
+	&.expire {
+		.modal-dialog {
+			@media (min-width: 576px) {
+				max-width: 400px;
+			}
+		}
+	}
+}

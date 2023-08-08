@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>購物車(3)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">購物車</h2>
+				<div class="stepCnt">
+					<div class="sItem done">
+						<div class="cube"><i class="far fa-check"></i></div>
+						<div class="text">購物車</div>
+					</div>
+					<div class="sLine active"></div>
+					<div class="sItem done">
+						<div class="cube"><i class="far fa-check"></i></div>
+						<div class="text">訂單確認</div>
+					</div>
+					<div class="sLine active"></div>
+					<div class="sItem ing">
+						<div class="cube">3</div>
+						<div class="text">完成訂單</div>
+					</div>
+				</div>
+				<div class="d-flex justify-content-center align-items-center rounded-circle mx-auto bg-pink" style="width:160px;height:160px;">
+					<i class="fal fa-gift-card fa-5x text-tomatoRed"></i>
+				</div>
+				<div class="my-3 text-center">
+					<div>感謝您的購買！</div>
+					<div class="my-2 title sm">您的訂單
+						<span class="text-tomatoRed">{{ orderNumber }}</span>已經成功提交正在處理中，
+						<p>您可至「會員中心」>「訂單管理」進行訂單內容與進度查詢。</p>
+					</div>
+					<div class="d-flex justify-content-center align-items-center">
+						<a :href="managePage" class="mr-1 btn btn-outline-limeGreen limit">查看訂單</a>
+						<a :href="pageUrl.home" class="btn btn-limeGreen limit">回首頁</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/normalCart/step3.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				orderManage: './memberCenterOrderManage.html',
+				preorderManage: './memberCenterPreorderManage.html',
+				groupBuyManage: './memberCenterGroupOrderManage.html'
+			}
+		})
+	</script>
+
+</body>
+
+</html>

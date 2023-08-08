@@ -1,0 +1,68 @@
+$colorMap: (
+	neutral-0: (
+		color: map-get($basicColor, neutral-0)
+	),
+	neutral-1: (
+		color: map-get($basicColor, neutral-1)
+	),
+	neutral-2: (
+		color: map-get($basicColor, neutral-2)
+	),
+	neutral-3: (
+		color: map-get($basicColor, neutral-3)
+	),
+	neutral-4: (
+		color: map-get($basicColor, neutral-4)
+	),
+	neutral-5: (
+		color: map-get($basicColor, neutral-5)
+	),
+	neutral-6: (
+		color: map-get($basicColor, neutral-6)
+	),
+	neutral-7: (
+		color: map-get($basicColor, neutral-7)
+	),
+	primary-1: (
+		color: map-get($basicColor, primary-1)
+	),
+	primary-2: (
+		color: map-get($basicColor, primary-2)
+	),
+	correct: (
+		color: map-get($basicColor, correct)
+	),
+	wrong: (
+		color: map-get($basicColor, wrong)
+	)
+);
+
+@each $key, $obj in $colorMap {
+	$color: map-get($obj, color);
+
+	.text-#{"" + $key} {
+		color: $color !important;
+	}
+
+	.bg-#{"" + $key} {
+		background-color: $color !important;
+	}
+
+	.bd-#{"" + $key} {
+		border-style: solid;
+		border-color: $color !important;
+		border-width: 1px;
+	}
+
+	.bd-top-#{"" + $key} {
+		border-top: 1px solid $color;
+	}
+
+	.bd-bottom-#{"" + $key} {
+		border-bottom: 1px solid $color;
+	}
+
+	.bd-right-#{"" + $key} {
+		border-right: 1px solid $color;
+	}
+}

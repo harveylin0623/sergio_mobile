@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>搜尋商品</title>
+	<link rel="preload" as="image" href="../img/empty.jpg" id="product-preload-image">
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar 
+			:keyword-api-url="apiUrl.keyword"
+			action-type="search"
+			@search-keyword="searchKeyword"
+		></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="mb-2" v-show="filterCriteria.keyword !== ''">
+					搜尋結果:<span class="ml-2 text-tomatoRed">{{ filterCriteria.keyword }}</span>
+				</h2>
+				<p class="mb-3 title sm">
+					共<span class="mx-1 text-tomatoRed">{{ paginationInfo.totalItem }}</span>個結果，頁數
+					<span>{{ paginationText }}</span>
+				</p>
+				<div class="row">
+					<search-popular
+						v-for="product in productList"
+						:key="product.product_code"
+						:product-info="product"
+					></search-popular>
+				</div>
+				<product-pagination
+					:current-page="paginationInfo.currentPage"
+					:total-page="paginationInfo.totalPage"
+					@pag-change="paginationChange"
+				></product-pagination>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/product/search.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				product: '/api/product'
+			},
+			pageUrl: {
+				home: './home.html',
+				productDetail: './allProductDetail.html',
+				searchProduct: './allProductSearchResult.html',
+			}
+		})
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+$flatColor: map-get($basicColor, limeGreen);
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background-color: $flatColor;
+  border-color: $flatColor;
+  &:hover,
+  &:focus {
+    background-color: $flatColor;
+    border-color: $flatColor;
+  }
+}
+
+.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), 
+.flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)) {
+  box-shadow: -10px 0 0 $flatColor;
+}

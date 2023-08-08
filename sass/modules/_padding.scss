@@ -1,0 +1,17 @@
+@each $key, $value in $paddingData {
+  .pt-#{""+$key} {
+    padding-top: $value !important;
+  }
+
+  .pr-#{""+$key} {
+    padding-right: $value !important;
+  }
+
+  .pb-#{""+$key} {
+    padding-bottom: $value !important;
+  }
+
+  .pl-#{""+$key} {
+    padding-left: $value !important;
+  }
+}

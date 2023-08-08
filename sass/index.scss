@@ -1,0 +1,19 @@
+@import './utility/index';
+
+#banner-swiper {
+	.swiper-pagination-bullet {
+		border-radius: 4px;
+		transition: width 0.25s;
+		&.swiper-pagination-bullet-active {
+			width: 20px;
+			background-color: map-get($basicColor, limeGreen);
+		}
+	}
+}
+
+.category-circle {
+	width: 85px;
+	>.img-box {
+		height: 85px;
+	}
+}

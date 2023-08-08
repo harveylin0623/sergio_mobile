@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>忘記密碼(1)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">忘記密碼</h2>
+				<div class="formCnt">
+					<validation-observer tag="div" ref="form">
+						<div class="mb-3 form-group">
+							<div class="mb-0 text-center text-link title sm">
+								請輸入您的手機號碼，系統會將驗證碼發送至您的手機，驗證身分後即可重設密碼。
+							</div>
+						</div>
+						<validation-provider tag="div" rules="required|phone" class="mb-3 form-group"
+							v-slot="{ errors,failed }">
+							<label class="title sm">
+								<span class="text-tomatoRed">*</span>手機號碼
+							</label>
+							<input type="text" class="form-control" maxlength="10" inputmode="numeric" placeholder="請輸入手機號碼" v-model.trim="user.mobile" @keyup.enter="submitHandler"/>
+							<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+						</validation-provider>
+						<button class="btn btn-limeGreen form-control" @click="submitHandler">確認</button>
+					</validation-observer>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<a :href="pageUrl.forget_password_step2" class="btn btn-limeGreen mx-auto limit"
+							v-if="tipInfo.status">確認</a>
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-else>確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+	</div>
+
+	<script type="module">
+		import app from '../js/page/forgotPassword/step1.js'
+		app({
+			apiUrl: {
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				forget_password: '/api/third_party_auth/forgot_password'
+			},
+			pageUrl: {
+				home: './home.html',
+				forget_password_step2: './forgotPWDVerifi.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

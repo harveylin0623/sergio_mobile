@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>修改手機號碼(1)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">修改手機號碼</h2>
+				<div class="stepCnt">
+					<div class="sItem ing">
+						<div class="cube">1</div>
+						<div class="text">填寫資料</div>
+					</div>
+					<div class="sLine"></div>
+					<div class="sItem">
+						<div class="cube">2</div>
+						<div class="text">手機驗證</div>
+					</div>
+				</div>
+				<validation-observer tag="div" ref="form">
+					<validation-provider tag="div" class="mb-2 form-group" rules="required|phone"
+						v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>手機號碼
+						</label>
+						<input type="number" class="form-control" maxlength="10" placeholder="請輸入新的手機號碼" inputmode="numeric" v-model.trim="user.mobile" @keyup.enter="submitHandler"/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<validation-provider tag="div" class="mb-3 form-group" rules="required|password"
+						v-slot="{ errors,failed }">
+						<label class="title sm" for="">
+							<span class="text-tomatoRed">*</span>密碼
+						</label>
+						<input type="password" class="form-control" placeholder="請輸入會員密碼" v-model.trim="user.password" @keyup.enter="submitHandler"/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<button class="mb-3 w-100 btn btn-limeGreen" @click="submitHandler">確認</button>
+				</validation-observer>
+			</div>
+		</div>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<a :href="pageUrl.changeMobile_step2" class="btn btn-limeGreen mx-auto limit" v-if="tipInfo.status">確認</a>
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-else>確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import app from '../js/page/member/change-mobile-step1.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				update_member_mobile: '/api/third_party_member/update_member_mobile'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				profile: './memberCenterProfile.html',
+				changeMobile_step2: './memberCenterProfileChangePhoneStep2.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

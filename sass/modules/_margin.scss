@@ -1,0 +1,30 @@
+@each $key, $value in $marginData {
+  .mt-#{"" + $key} {
+    margin-top: $value !important;
+  }
+
+  .mr-#{"" + $key} {
+    margin-top: $value !important;
+  }
+
+  .mb-#{"" + $key} {
+    margin-top: $value !important;
+  }
+
+  .ml-#{"" + $key} {
+    margin-top: $value !important;
+  }
+}
+
+@each $key, $value in $marginData {
+  .space-x-#{"" + $key} {
+    >*+* {
+      margin-left: $value;
+    }
+  }
+  .space-y-#{"" + $key} {
+    >*+* {
+      margin-top: $value;
+    }
+  }
+}

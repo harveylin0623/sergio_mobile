@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>預購訂單管理詳情</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<template v-if="hasOrderDetail">
+				<div class="mb-3 container">
+					<h2 class="page-title">預購訂單詳情</h2>
+					<h3 class="mb-2">訂購內容</h3>
+					<div class="mb-2 title sm text-link">
+						<p class="mb-2 text-link">訂單編號 : {{ orderDetail.order_num }}</p>
+						<p class="mb-2 text-link">訂單狀態 : {{ orderDetail.status_message }}</p>
+						<p class="mb-2 text-link">購買時間 : {{ orderDetail.create_time }}</p>
+            <p class="mb-2 text-link">預購型態 : {{ orderDetail.order_type_text }}</p>
+					</div>
+					<div>
+						<a 
+							v-if="orderDetail.isRefunds"
+							:href="orderRefundPageLink" 
+							class="btn btn-outline-secondary" 
+						>退貨申請</a>
+						<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#contactPopup">聯絡客服</button>
+					</div>
+				</div>
+
+				<div class="p-2 bg-mintGreen">商品明細</div>
+	
+				<div class="container">
+					<preorder-order-row
+						v-for="product in productList"
+						:key="product.uid"
+						:product-info="product"
+						:order-type="orderDetail.order_type"
+					></preorder-order-row>
+				</div>
+	
+				<div class="p-2 bg-mintGreen" v-if="hasAddOnList">加購商品</div>
+	
+				<div class="container">
+					<div>
+						<addon-order-row
+							v-for="product in addOnList"
+							:key="product.uid"
+							:product-info="product"
+						></addon-order-row>
+					</div>
+					<div class="py-2">
+						<div class="d-flex align-items-center text-right mb-1">
+							<p class="mb-0 pr-1 flex-grow-1 flex-shrink-1 title sm">{{ subtotalText }}</p>
+							<p class="flex-grow-0 flex-shrink-0 text-break" style="width:100px;">
+								${{ orderDetail.total | currency }}
+							</p>
+						</div>
+						<div v-if="hasBalance" class="d-flex align-items-center text-right mb-1">
+							<p class="mb-0 pr-1 flex-grow-1 flex-shrink-1 title sm">尾款金額</p>
+							<p class="flex-grow-0 flex-shrink-0 text-break" style="width:100px;">
+								${{ orderDetail.final_payment.total | currency }}
+							</p>
+						</div>
+						<div v-if="showLogisticsFee" class="d-flex align-items-center text-right mb-1">
+							<p class="mb-0 pr-1 flex-grow-1 flex-shrink-1 title sm">運費</p>
+							<p class="flex-grow-0 flex-shrink-0 text-break" style="width:100px;">
+								${{ logisticsFee | currency }}
+							</p>
+						</div>
+						<div v-if="!isDeposit" class="d-flex align-items-center text-right mb-1">
+							<p class="mb-0 pr-1 flex-grow-1 flex-shrink-1 title sm">票券</p>
+							<p class="flex-grow-0 flex-shrink-0 text-break" style="width:100px;">
+								-${{ promoFee | currency }}
+							</p>
+						</div>
+						<div class="d-flex align-items-center text-right mb-1">
+							<p class="mb-0 pr-1 flex-grow-1 flex-shrink-1">總金額</p>
+							<p class="flex-grow-0 flex-shrink-0 text-break text-tomatoRed" style="width:100px;">
+								${{ totalAmount | currency }}
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3 pt-2 bg-term"></div>
+
+				<div class="container">
+					<div class="mb-3" v-if="hasCoupon">
+						<h3 class="mb-2">票券使用資訊</h3>
+						<div class="pt-2 pr-2 pl-2 pb-0 rounded bd-bootstrap">
+							<div class="d-flex align-items-start mb-2 title sm"  v-for="coupon in couponList" :key="coupon.coupon_no">
+								<p class="flex-grow-0 flex-shrink-0" style="width:70px;">票券名稱 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ coupon.coupon_title }}({{ coupon.coupon_no }})</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="showRefundData">
+						<h3 class="mb-2">退貨資訊</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-0 flex-shrink-0" style="width:70px;">退貨狀態 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ orderDetail.refunds.review }}</p>
+							</div>
+							<div class="d-flex align-items-start title sm" v-if="showRefundNumber">
+								<p class="flex-grow-0 flex-shrink-0" style="width:70px;">退貨編號 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ orderDetail.refunds.rtn_order_n }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="showDelivery">
+						<h3 class="mb-2">配送方式</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">{{ deliveryText }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3">
+						<h3 class="mb-2">{{ invoiceTitleText }}</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">{{ normalInvoiceValue }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="hasBalance">
+						<h3 class="mb-2">尾款發票資訊</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">{{ finalInvoiceValue }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3">
+						<h3 class="mb-2">{{ paymentTitleText }}</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">{{ normalPaymentText }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="hasBalance">
+						<h3 class="mb-2">尾款付款方式</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">{{ finalPaymentText }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3">
+						<h3 class="mb-2">{{ payStatusText }}</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">
+									<span>{{ normalPayStatus }}</span>
+                  <a 
+										v-if="showNormalPayLink"
+										href="javascript:;"
+										class="text-tomatoRed"
+										@click="openDigitalMap(0)"
+									>[前往付款]</a>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="hasBalance">
+						<h3 class="mb-2">尾款付款狀態</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-1 flex-grow-1">
+									<span>{{ finalPayStatus }}</span>
+                  <a
+										v-if="showFinalPayLink" 
+										href="javascript:;" 
+										class="text-tomatoRed"
+										@click="openDigitalMap(1)"
+									>[前往付款]</a>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="showOrderer">
+						<h3 class="mb-2">訂購人資訊</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start mb-2 title sm">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">姓名 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ ordererName }}</p>
+							</div>
+							<div class="d-flex align-items-start mb-2 title sm">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">手機 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ ordererPhone }}</p>
+							</div>
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">地址 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ ordererFullAddress }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" v-if="showReceiver">
+						<h3 class="mb-2">收件人資訊</h3>
+						<div class="p-2 rounded bd-bootstrap">
+							<div class="d-flex align-items-start title sm mb-2">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">姓名 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ receiverName }}</p>
+							</div>
+							<div class="d-flex align-items-start title sm mb-2">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">手機 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ receiverPhone }}</p>
+							</div>
+							<div class="d-flex align-items-start title sm mb-2">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">地址 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ receiverFullAddress }}</p>
+							</div>
+							<div class="d-flex align-items-start title sm">
+								<p class="flex-grow-0 flex-shrink-0" style="width:40px;">備註 :</p>
+								<p class="flex-grow-1 flex-grow-1">{{ receiverRemark }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</template>
+		</div>
+
+		<contact-modal
+			:product-info="{}"
+			spec-img-url=""
+			:show-product="false"
+			@contact="contactHandler"
+			ref="contactModal"
+		></contact-modal>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ contactTip.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<p class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/OrderRow/PreorderOrderRow.js'
+		import '../js/vue-component/OrderRow/AddonOrderRow.js'
+		import app from '../js/page/member/pre-order-detail.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				order_detail: '/api/preorder/order',
+				online_service_create: '/api/online_service',
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				orderManage: './memberCenterPreorderManage.html',
+				orderRefund: './memberCenterPreorderManageRefund.html',
+				orderPayRefund: './memberCenterPreorderManagePayRefund.html'
+			}
+		})
+	</script>
+
+</body>
+
+</html>

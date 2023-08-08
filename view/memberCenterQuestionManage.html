@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>提問管理</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">提問管理</h2>
+				<div class="mb-3">
+					<div class="mb-2 search">
+						<input type="text" class="form-control" placeholder="發問主旨" v-model.trim="criteria.keyword">
+					</div>
+					<div class="mb-2 row">
+						<div class="pr-1 col-6">
+							<p class="mb-1 text-link title sm">搜尋日期</p>
+							<input type="text" id="dateInput" class="form-control">
+						</div>
+						<div class="pl-1 col-6">
+							<p class="mb-1 text-link title sm">提問類別</p>
+							<select class="form-control" v-model="criteria.type">
+								<option value="">全部</option>
+								<option value="product">商品</option>
+								<option value="order">訂單</option>
+							</select>
+						</div>
+					</div>
+					<button class="w-100 btn btn-limeGreen" @click="searchHandler">搜尋</button>
+				</div>
+				<div>
+					<question-list
+						v-for="question in questionList"
+						:key="question.id"
+						:question="question"
+					></question-list>
+				</div>
+				<div class="my-3 text-center" v-show="hasNextPage">
+					<button class="btn btn-outline-limeGreen limit" @click="seeMore">{{ buttonText }}</button>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<logout-modal @logout="logoutHandler"></logout-modal>
+
+		<relogin-modal></relogin-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/QuestionList/index.js'
+		import app from '../js/page/member/question-manage.js'
+		app({
+			apiUrl: {
+				me: '/api/third_party_auth/me',
+				refresh: '/api/third_party_auth/refresh',
+				logout: '/api/third_party_auth/logout',
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				cart_total: '/api/cart_total',
+				notification: '/api/member/notification',
+				online_service: '/api/online_service'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				questionDetail: './memberCenterQuestionManageCustomerServices.html'
+			}
+		})
+	</script>
+</body>
+
+</html>

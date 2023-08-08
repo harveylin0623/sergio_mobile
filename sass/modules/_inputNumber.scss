@@ -1,0 +1,22 @@
+.input-number-component {
+  display: flex;
+  align-items: center;
+  &.sm {
+    input {
+      width: 60px;
+    }
+  }
+  >.dir {
+    @extend %centerFlex;
+    @include size(35px);
+    border: 1px solid #ced4da;
+    cursor: pointer;
+  }
+  input {
+    @include size(70px, 35px);
+    text-align: center;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-radius: 0;
+  }
+}

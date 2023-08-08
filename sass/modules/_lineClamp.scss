@@ -1,0 +1,12 @@
+%clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;  
+}
+
+@each $key, $value in $line-cap {
+  .line-clamp-#{"" + $key} {
+    @extend %clamp;
+    -webkit-line-clamp: $value;
+  }
+}

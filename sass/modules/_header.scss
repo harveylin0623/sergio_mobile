@@ -1,0 +1,45 @@
+#my-header {
+	position: sticky;
+	top: 0;
+	padding: 12px 0;
+	box-shadow: map-get($shadow, header);
+	z-index: 1000;
+	.fa-bars {
+		font-size: 22px;		
+	}
+	.logo-bg {
+		@include size(72.28px, 28.57px);
+		background-image: url("../img/knn-logo.jpg");
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center center;
+	}
+	.logo-title {
+		font-size: 20px;
+		@media (max-width: 330px) {
+			display: none;
+		}
+	}
+	.icon-page-link {
+		position: relative;
+		@include elGutter(margin-right, 12px);
+		font-size: 20px;
+	}
+	.bell-dot {
+		position: absolute;
+		right: 0;
+		top: 3px;
+		@include size(5px);
+	}
+	.cart-count {
+		position: absolute;
+		right: -8px;
+		top: -5px;
+		@include size(16px);
+		line-height: 16px;
+		font-size: 12px;
+		>span {
+			transform: scale(0.82);
+		}
+	}
+}

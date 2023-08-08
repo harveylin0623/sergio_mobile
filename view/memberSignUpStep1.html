@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
+	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
+	<title>註冊(1)</title>
+	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../dist/css/vendor.min.css">
+	<link rel="stylesheet" href="../css/main.css" />
+	<script src="../libs/vue/vue.js"></script>
+	<script src="../dist/js/vendor.min.js"></script>
+	<script src="../dist/js/utility.js"></script>
+	<script src="../dist/js/api.js"></script>
+	<script src="../dist/js/vue-global-component.js"></script>
+	<script src="../dist/js/vue-mixin.js"></script>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<my-header :api-url="apiUrl" ref="header"></my-header>
+
+		<category-sidebar :category-api-url="apiUrl.product_category"></category-sidebar>
+
+		<keyword-sidebar :keyword-api-url="apiUrl.keyword"></keyword-sidebar>
+
+		<div class="content-section">
+			<div class="container">
+				<h2 class="page-title">會員註冊</h2>
+				<div class="formCnt">
+					<div class="stepCnt">
+						<div class="sItem ing">
+							<div class="cube">1</div>
+							<div class="text">填寫資料</div>
+						</div>
+						<div class="sLine"></div>
+						<div class="sItem">
+							<div class="cube">2</div>
+							<div class="text">手機驗證</div>
+						</div>
+					</div>
+					<div>
+						<validation-observer tag="div" ref="form">
+							<div class="form-row">
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required|phone"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>手機號碼
+									</label>
+									<input type="number" class="form-control" maxlength="10" inputmode="numeric" placeholder="請輸入手機號碼，做為您的帳號" v-model.trim="user.mobile" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required|email"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>電子信箱
+									</label>
+									<input type="email" class="form-control" placeholder="請輸入電子信箱"
+										v-model.trim="user.email" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+							</div>
+							<div class="form-row">
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required|password"
+									v-slot="{ errors,failed }" vid="a">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>密碼
+									</label>
+									<input type="password" maxlength="12" class="form-control" placeholder="請輸入6~12英數字密碼" v-model.trim="user.password" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required|confirmPw:@a"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>確認密碼
+									</label>
+									<input type="password" maxlength="12" class="form-control" placeholder="請輸入確認密碼"
+										v-model.trim="user.confirm_password" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+							</div>
+							<hr>
+							<div class="form-row">
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>姓名
+									</label>
+									<input type="text" class="form-control" placeholder="請輸入您的中文或英文姓名"
+										v-model.trim="user.name" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+									<small class="text-link">※ 超商取貨須核對之姓名</small>
+								</validation-provider>
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>性別
+									</label>
+									<select class="form-control" v-model="user.gender">
+										<option value="" disabled>請選擇</option>
+										<option v-for="gender in genderList" :key="gender.value" :value="gender.value">
+											{{ gender.title }}
+										</option>
+									</select>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+							</div>
+							<div class="form-row">
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>安全問題
+									</label>
+									<select class="form-control" v-model="user.security_question">
+										<option value="" disabled>請選擇</option>
+										<option v-for="question in questionList" :key="question.value"
+											:value="question.value">
+											{{ question.title }}
+										</option>
+									</select>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="required"
+									v-slot="{ errors,failed }">
+									<label class="title sm">
+										<span class="text-tomatoRed">*</span>安全問題答案
+									</label>
+									<input type="text" class="form-control" placeholder="請輸入答案"
+										v-model="user.security_answer" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+							</div>
+							<div>
+								<div class="mb-2">
+									<p class="title sm"><span class="text-tomatoRed">*</span>出生日期</p>
+									<div class="row">
+										<div class="pr-1 col-6">
+											<select class="form-control" v-model="userBirthday.year">
+												<option v-for="year in yearList" :key="year.value" :value="year.value">{{ year.text }}</option>
+											</select>
+										</div>
+										<div class="pl-1 col-6">
+											<select class="form-control" v-model="userBirthday.month">
+												<option v-for="month in monthList" :key="month.value" :value="month.value">{{ month.text }}</option>
+											</select>
+										</div>
+										<p class="col-12 error-msg" v-show="!birthdayIsValid">必須大於7歲</p>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<validation-provider tag="div" class="mb-2 form-group col-12" rules="mobile-vehicle" v-slot="{ errors,failed }">
+									<label class="title sm" for="">手機載具</label>
+									<input type="text" class="form-control" placeholder="請輸入手機載具" v-model.trim="user.einvoice_carrier_no" @keyup.enter="submitHandler"/>
+									<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+								</validation-provider>
+							</div>
+							<div class="form-row">
+								<div class="mb-2 form-group col-6">
+									<label class="title sm" for="">縣市</label>
+									<select class="form-control" v-model="addressInfo.city">
+										<option value="">請選擇</option>
+										<option v-for="(city,index) in cityList" :key="index" :value="city">{{ city }}
+										</option>
+									</select>
+								</div>
+								<div class="mb-2 form-group col-6">
+									<label class="title sm" for="">地區</label>
+									<select class="form-control" v-model="addressInfo.district">
+										<option value="">請選擇</option>
+										<option v-for="(district,index) in districtList" :key:="index"
+											:value="district.name">
+											{{ district.name }}
+										</option>
+									</select>
+								</div>
+								<div class="mb-2 form-group col-12">
+									<label class="title sm">地址</label>
+									<input type="text" class="form-control" placeholder="詳細地址" v-model.trim="addressInfo.road" @keyup.enter="submitHandler"/>
+								</div>
+							</div>
+							<validation-provider tag="div" class="mb-2 form-group form-check flex-wrap" rules="term"
+								v-slot="{ errors,failed }">
+								<input type="checkbox" class="form-check-input" v-model="user.agree">
+								<label class="form-check-label d-flex" style="font-size:14px;">我同意
+									<register-term v-for="(value, key, index) in termInfo" :key="key" :info="value"
+										:order="index" :total="totalTerms" @term-detail="shwoTermDetail"></register-term>
+								</label>
+								<p class="error-msg ml-2" v-show="failed">{{ errors[0] }}</p>
+							</validation-provider>
+							<div class="form-group text-tomatoRed" style="font-size:14px;">
+								※ 請注意！「姓名」、「性別」、「出生日期」等欄位，註冊完成後均無法修改請謹慎填寫。
+							</div>
+							<div class="form-group text-center mb-4" style="font-size:14px;">
+								<button class="d-block mb-3 w-100 btn btn-limeGreen" @click="submitHandler">下一步</button>
+								<span>已經有帳號了?</span>
+								<a :href="pageUrl.login" class="text-limeGreen">馬上登入</a>
+							</div>
+						</validation-observer>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="termPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>{{ termModal.title }}</h2>
+					</div>
+					<div class="modal-body bg-term" v-html="termModal.content" style="font-size: 14px;"></div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="tipPopup" data-backdrop="static">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header mx-auto">
+						<h2>提示</h2>
+					</div>
+					<div class="modal-body">
+						<p class="text-center">{{ tipInfo.message }}</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal">確認</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<app-download-modal></app-download-modal>
+
+		<loading v-show="isLoading"></loading>
+
+		<my-footer></my-footer>
+	</div>
+
+	<script type="module">
+		import '../js/vue-component/Term/RegisterTerm.js'
+		import app from '../js/page/register/step1.js'
+		app({
+			apiUrl: {
+				product_category: '/api/product_category',
+				keyword: '/api/scenes/home/keyword',
+				term: '/api/term/brief_term',
+				register_check: '/api/third_party_auth/register_check',
+				register: '/api/third_party_auth/register',
+				check_barcode: '/api/ecpay/invoice/check_barcode'
+			},
+			pageUrl: {
+				home: './home.html',
+				login: './memberLogin.html',
+				register_step2: './memberSignUpStep2.html'
+			}
+		})
+	</script>
+
+</body>
+
+</html>
