@@ -3,7 +3,7 @@
 	left: 0;
 	top: 0;
 	@include size(100%);
-	background-color: rgba(#000, 0.6);
+	background-color: map-get($basicColor, pop);
 	z-index: 1500;
 	>.svg-wrapper {
 		@extend %posCenter;
@@ -12,7 +12,7 @@
 		.shape {
 			animation: spinner 2.1s linear infinite;
 			fill: transparent;
-			stroke: map-get($basicColor, limeGreen);
+			stroke: map-get($basicColor, primary-2);
 			stroke-dasharray: 0 565;
 			stroke-dashoffset: 0;
 			stroke-width: 5px;

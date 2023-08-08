@@ -1590,7 +1590,7 @@ input[type=radio]:checked::after {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1500;
 }
 #loading-backdrop > .svg-wrapper {
@@ -1603,6 +1603,7 @@ input[type=radio]:checked::after {
   -webkit-animation: spinner 2.1s linear infinite;
           animation: spinner 2.1s linear infinite;
   fill: transparent;
+  stroke: #A174A6;
   stroke-dasharray: 0 565;
   stroke-dashoffset: 0;
   stroke-width: 5px;
