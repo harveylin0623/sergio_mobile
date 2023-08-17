@@ -2,11 +2,13 @@
 
 #banner-swiper {
 	.swiper-pagination-bullet {
-		border-radius: 4px;
+		border-radius: map-get($radius, co);
+		background-color: map-get($basicColor, neutral-7);
+		opacity: 1;
 		transition: width 0.25s;
 		&.swiper-pagination-bullet-active {
 			width: 20px;
-			background-color: map-get($basicColor, limeGreen);
+			background-color: map-get($basicColor, primary-1);
 		}
 	}
 }

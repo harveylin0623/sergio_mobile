@@ -49,7 +49,7 @@ Vue.component('lazy-banner', {
     }
   },
   template: `
-    <div class="mb-2">
+    <div class="mb-16">
       <div>
         <div v-show="showPlaceholderImage">
           <img :src="preloadImage" class="full-img" alt="" />

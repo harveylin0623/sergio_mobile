@@ -36,9 +36,9 @@
 		<section class="content-section no-padding">
 			<lazy-banner :banner-list="bannerList"></lazy-banner>
 
-			<div class="mb-3">
+			<div class="mb-12">
 				<div class="container">
-					<div class="d-flex align-items-start flex-nowrap overflow-auto">
+					<div class="d-flex align-items-start flex-nowrap overflow-auto space-x-16">
 						<category-circle
 							v-for="(popular,index) in popularInfo1List"
 							:key="index"
@@ -48,23 +48,21 @@
 				</div>
 			</div>
 
-			<div class="mb-3">
+			<div class="mb-12">
 				<lazy-ad swiper-id="advertise-swiper" :advertise-list="advertiseList"></lazy-ad>
 			</div>
 
-			<div class="mb-3">
+			<div class="mb-20">
 				<lazy-popular
 					:popular-list="popularInfo2List"
 					root-margin="180px 180px 180px 180px"
 				></lazy-popular>
 			</div>	
 
-			<div class="mb-3" v-show="hasProductList">
-				<div class="container mb-2">
-					<h2>熱賣商品</h2>
-				</div>
+			<div v-show="hasProductList" class="mb-4">
 				<div class="container">
-					<div class="row">
+					<h2 class="mb-16 text-primary-1 text-center">熱賣商品</h2>
+					<div class="product-row">
 						<product-popular
 							v-for="product in productList" 
 							:key="product.product_code"
@@ -74,7 +72,7 @@
 				</div>
 			</div>
 			
-			<div class="mb-3">
+			<div class="mb-20">
 				<lazy-ad
 					swiper-id="advertise2-swiper" 
 					:advertise-list="advertiseList"
@@ -82,7 +80,7 @@
 				></lazy-ad>
 			</div>
 	
-			<div class="mb-3" v-show="hasNewsTopList">
+			<div v-show="hasNewsTopList" class="mb-3">
 				<div class="container">
 					<h2 class="mb-2">最新消息</h2>
 					<lazy-news

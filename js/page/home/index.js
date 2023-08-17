@@ -85,6 +85,7 @@ export default function ({ apiUrl, pageUrl }) {
 				this.popularInfo2List = this.createBannerData(popular2.aaData)
 				this.newsTopList = this.processNews(newsTop.aaData)
 				this.newsList = this.processNews(news.aaData)
+				console.log(product)
 				this.productList = this.processProduct(product.aaData)
 			}
 		},

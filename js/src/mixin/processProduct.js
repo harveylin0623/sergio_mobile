@@ -7,9 +7,9 @@
     methods: {
       processProduct(payload) {
 				return payload.reduce((prev, current) => {
-					let { product_code, product_name, main_image, product_promo_price, category_id } = current
+					let { product_code, product_name, main_image, product_price, product_promo_price, category_id } = current
 					let linkUrl = `${this.pageUrl.productDetail}?productCode=${product_code}&category_id=${category_id}`
-					prev.push({ product_code, product_name, main_image, product_promo_price, linkUrl })
+					prev.push({ product_code, product_name, main_image, product_price, product_promo_price, linkUrl })
 					return prev
 				}, [])
 			},

@@ -1,9 +1,12 @@
 #banner-swiper .swiper-pagination-bullet {
   border-radius: 4px;
+  background-color: #FFFFFF;
+  opacity: 1;
   transition: width 0.25s;
 }
 #banner-swiper .swiper-pagination-bullet.swiper-pagination-bullet-active {
   width: 20px;
+  background-color: #68566A;
 }
 
 .category-circle {

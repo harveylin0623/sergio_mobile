@@ -4,6 +4,7 @@ html {
 }
 
 body {
+	color: map-get($basicColor, neutral-0);
 	font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
 	background-color: map-get($basicColor, neutral-7);
 }
@@ -54,6 +55,17 @@ hr {
 }
 
 //===page
+.product-row {
+	display: flex;
+	flex-wrap: wrap;
+	>*:nth-child(odd) {
+		padding-right: 8px;
+	}
+	>*:nth-child(even) {
+		padding-left: 8px;
+	}
+}
+
 .centerFlex {
 	display: flex;
 	justify-content: center;

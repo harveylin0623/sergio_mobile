@@ -23,10 +23,10 @@ Vue.component('category-circle', {
     this.startObserve()
   },
   template: `
-    <a :href="popular.linkUrl" class="flex-grow-0 flex-shrink-0 mr-3 category-circle">
+    <a :href="popular.linkUrl" class="flex-grow-0 flex-shrink-0 category-circle">
       <div class="rounded-circle img-box" ref="frame">
         <img :src="preloadImage" class="rounded-circle full-img" alt="">
       </div>
-      <div class="pt-1 mb-0 text-dark text-center title xs">{{ popular.title }}</div>
+      <div class="pt-4 text-neutral-0 text-center text-xs">{{ popular.title }}</div>
     </a>`
 })

@@ -635,6 +635,36 @@ a:focus {
   padding-bottom: 20px !important;
 }
 
+.p-full {
+  padding: 100% !important;
+}
+
+.pt-full {
+  padding-top: 100% !important;
+}
+
+.pr-full {
+  padding-right: 100% !important;
+}
+
+.pb-full {
+  padding-bottom: 100% !important;
+}
+
+.pl-full {
+  padding-left: 100% !important;
+}
+
+.px-full {
+  padding-left: 100% !important;
+  padding-right: 100% !important;
+}
+
+.py-full {
+  padding-top: 100% !important;
+  padding-bottom: 100% !important;
+}
+
 .text-neutral-0 {
   color: #242424 !important;
 }
@@ -1140,6 +1170,7 @@ html {
 }
 
 body {
+  color: #242424;
   font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
   background-color: #FFFFFF;
 }
@@ -1186,6 +1217,17 @@ hr {
 *[class*=col].sm {
   padding-left: 3px;
   padding-right: 3px;
+}
+
+.product-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.product-row > *:nth-child(odd) {
+  padding-right: 8px;
+}
+.product-row > *:nth-child(even) {
+  padding-left: 8px;
 }
 
 .centerFlex {
