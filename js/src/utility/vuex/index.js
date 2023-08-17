@@ -8,7 +8,8 @@
     state: {
       isAuth: false,
       categorySidebarIsOpen: false,
-      keywordSidebarIsOpen: false
+      keywordSidebarIsOpen: false,
+      cartCount: 0
     },
     mutations: {
       setAuth(state, payload) {
@@ -19,6 +20,9 @@
       },
       toggleKeyword(state, payload) {
         state.keywordSidebarIsOpen = payload
+      },
+      updateCartCount(state, payload) {
+        state.cartCount = payload
       }
     }
   })

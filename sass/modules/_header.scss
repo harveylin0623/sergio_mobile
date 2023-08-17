@@ -1,6 +1,7 @@
 #my-header {
 	position: sticky;
 	top: 0;
+	box-shadow: map-get($shadow, header);
 	z-index: 1000;
 	.logo-bg {
 		@include size(120px, 32px);

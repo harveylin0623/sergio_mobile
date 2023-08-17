@@ -4,20 +4,22 @@ Vue.component('my-header', {
   },
   data: () => ({
     notifyInfo: { list: [], unReadTotal: 0 },
-    cartCount: 0,
     isServer: false,
     localUrl: window.componentPageUrl.myHeader.localUrl,
     serverUrl: window.componentPageUrl.myHeader.serverUrl
   }),
   computed: {
-    isAuth() {
-      return this.$store.state.isAuth
-    },
     realUrl() {
       return this.isServer ? this.serverUrl : this.localUrl
     },
     cartPageUrl() {
       return this.isAuth ? this.realUrl.cart : this.realUrl.login
+    },
+    isAuth() {
+      return this.$store.state.isAuth
+    },
+    cartCount() {
+      return this.$store.state.cartCount
     },
     showCartCount() {
       return this.isAuth && this.cartCount > 0
@@ -34,7 +36,7 @@ Vue.component('my-header', {
       this.$store.commit('toggleKeyword', true)
     },
     updateCartCount(count) {
-      this.cartCount = count
+      this.$store.commit('updateCartCount', count)
     },
     async setAuthStatus(status) {
       if (!status) return
