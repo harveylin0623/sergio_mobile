@@ -19,7 +19,7 @@ Vue.component('lazy-popular', {
       new Swiper('#popular-swiper', {
         loop: true,
         slidesPerView: 'auto',
-        spaceBetween: 10,
+        spaceBetween: 8,
         autoplay: {
           delay: 5000,
           disableOnInteraction: false

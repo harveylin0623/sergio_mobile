@@ -19,7 +19,7 @@ Vue.component('lazy-news', {
       new Swiper('#news-swiper', {
         loop: true,
         slidesPerView: 'auto',
-        spaceBetween: 10,
+        spaceBetween: 16,
         autoplay: {
           delay: 5000,
           disableOnInteraction: false
@@ -64,13 +64,13 @@ Vue.component('lazy-news', {
       <template v-if="allImageIsLoaded">
         <div id="news-swiper" class="swiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="news in slideList" :key="news.id" style="width:80%;">
-              <a :href="news.linkUrl" class="d-block news-link">
-                <div class="img-box">
-                  <img :src="news.imgUrl" class="full-img" alt="">
+            <div v-for="news in slideList" :key="news.id" class="swiper-slide" style="width:80%;">
+              <a :href="news.linkUrl" class="d-block">
+                <div class="mb-8">
+                  <img :src="news.imgUrl" class="full-img rounded-lg" alt="">
                 </div>
-                <p class="mt-1 mb-0 title sm ellipsis only text-dark">{{ news.title }}</p>
-                <p class="text-date title xs mb-0">{{ news.startTime }}</p>
+                <p class="text-sm text-neutral-0 line-clamp-1">{{ news.title }}</p>
+                <p class="text-xs text-neutral-3">{{ news.startTime }}</p>
               </a>
             </div>
           </div>
