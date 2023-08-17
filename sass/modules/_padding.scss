@@ -1,26 +1,30 @@
 @each $key, $value in $paddingData {
-  .pt-#{""+$key} {
+  .p-#{"" + $key} {
+    padding: $value !important;
+  }
+
+  .pt-#{"" + $key} {
     padding-top: $value !important;
   }
 
-  .pr-#{""+$key} {
+  .pr-#{"" + $key} {
     padding-right: $value !important;
   }
 
-  .pb-#{""+$key} {
+  .pb-#{"" + $key} {
     padding-bottom: $value !important;
   }
 
-  .pl-#{""+$key} {
+  .pl-#{"" + $key} {
     padding-left: $value !important;
   }
 
-  .px-#{""+$key} {
+  .px-#{"" + $key} {
     padding-left: $value !important;
     padding-right: $value !important;
   }
 
-  .py-#{""+$key} {
+  .py-#{"" + $key} {
     padding-top: $value !important;
     padding-bottom: $value !important;
   }

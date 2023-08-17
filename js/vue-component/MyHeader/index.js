@@ -53,7 +53,7 @@ Vue.component('my-header', {
     this.isServer = window.checkIsServer()
   },
   template: `
-    <header id="my-header" class="py-10 bg-neutral-7">
+    <header id="my-header" class="py-12 bg-neutral-7">
       <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
           <div class="mr-8 text-primary-1 text-4xl" @click="toggleCategory">

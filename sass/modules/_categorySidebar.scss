@@ -2,8 +2,8 @@
   position: fixed;
   left: 0;
   top: 0;
-  @include size(100%, 100vh);
-  background-color: #fff;
+  @include size(100%, 100dvh);
+  background-color: map-get($basicColor, neutral-7);
   transform: translateX(-100%);
   transition: transform 0.15s ease;
   z-index: 1001;
@@ -11,45 +11,20 @@
     transform: translateX(0);
   }
   >.category-header {
-    padding: 12px 0;
-    .fa-times {
-      font-size: 30px;
-    }
     .logo-bg {
-      @include size(72.28px, 28.57px);
-      background-image: url("../img/knn-logo.jpg");
+      @include size(120px, 32px);
+      background-image: url("../img/header_logo.png");
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center center;
     }
-    .logo-title {
-      font-size: 20px;
-    }
   }
-  >.link-slider {
-    box-shadow: map-get($shadow, header)#{"" + inset};
-    a {
-      white-space: nowrap;
-    }
-  }
-  .fa-user-circle {
-    font-size: 35px;
-  }
-  .auth-function {
-    a {
-      font-size: 20px;
-    }
-  }
-  >.category-block {
-    height: calc(100vh - 56px - 40px - 62px - 35px);
-    >.category-item {
-      padding-top: 8px;
-      padding-bottom: 8px;
-      color: #000;
-      font-size: 18px;
+  .scroll-block {
+    height: calc(100dvh - 60px - 44px);
+    .category-item {
       &.active {
-        color: #fff;
-        background-color: map-get($basicColor, limeGreen);
+        color: map-get($basicColor, neutral-7);
+        background-color: map-get($basicColor, primary-1);
       }
     }
   }

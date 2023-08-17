@@ -65,4 +65,10 @@ $colorMap: (
 	.bd-right-#{"" + $key} {
 		border-right: 1px solid $color;
 	}
+
+	.divide-y-#{"" + $key} {
+		>*+* {
+			border-top: 1px solid $color;			
+		}
+	}
 }

@@ -6,35 +6,39 @@ Vue.component('category-sidebar', {
   },
   data: () => ({
     categoryList: [],
-    categoryKey: 'knn-category',
+    categoryKey: 'category-sidebar-data',
     isServer: false,
     localUrl: window.componentPageUrl.myHeader.localUrl,
     serverUrl: window.componentPageUrl.myHeader.serverUrl
   }),
   computed: {
+    realUrl() {
+      return this.isServer ? this.serverUrl : this.localUrl
+    },
+    webFunctionList() {
+      return [
+        { id: 'link-1', title: '文章列表', url: this.realUrl.news },
+        { id: 'link-3', title: '優惠活動', url: this.realUrl.activity },
+        { id: 'link-4', title: '常見問題', url: this.realUrl.faq },
+        { id: 'link-5', title: '課程專區', url: '' },
+        { id: 'link-6', title: 'APP下載', url: 'javascript:;', type: 'modal' },
+      ]
+    },
     isAuth() {
       return this.$store.state.isAuth
     },
     isOpen() {
       return this.$store.state.categorySidebarIsOpen
     },
-    realUrl() {
-      return this.isServer ? this.serverUrl : this.localUrl
-    },
-    linkUrl() {
-      return [
-        { id: 'link-1', title: '文章列表', url: this.realUrl.news },
-        { id: 'link-3', title: '優惠活動', url: this.realUrl.activity },
-        { id: 'link-4', title: '常見問題', url: this.realUrl.faq },
-        { id: 'link-5', title: 'APP下載', url: 'javascript:;', type: 'modal' },
-      ]
+    cartCount() {
+      return this.$store.state.cartCount
     }
   },
   methods: {
     closeHandler() {
       this.$store.commit('toggleCategory', false)
     },
-    linkClick(payload) {
+    functionClick(payload) {
       if (payload.type !== 'modal') return
       $('#appDownloadPopup').modal('show')
     },
@@ -54,8 +58,8 @@ Vue.component('category-sidebar', {
       let storageData = window.sessionStorageObj.getItem(this.categoryKey)
       if (storageData === null) {
         let url = `${this.categoryApiUrl}?category_id=0`
-        let lists = await productApi.product_category({ url }).then(res => res.aaData)
-        let categoryList = lists.map(item => ({ categoryId: item.id, categoryName: item.category_name }))
+        let response = await productApi.product_category({ url }).then(res => res.aaData)
+        let categoryList = response.map(item => ({ categoryId: item.id, categoryName: item.category_name }))
         categoryList = categoryList.filter(item => item.categoryId !== 0)
         window.sessionStorageObj.setItem(this.categoryKey, categoryList)
         this.categoryList = categoryList
@@ -70,55 +74,60 @@ Vue.component('category-sidebar', {
   },
   template: `
     <div id="categorySidebar" :class="{open:isOpen}">
-      <div class="category-header">
-        <div class="container d-flex align-items-center">
-          <div class="mr-2 text-limeGreen" @click="closeHandler">
-            <i class="fal fa-times"></i>
+      <div class="py-12 category-header">
+        <div class="d-flex align-items-center px-16">
+          <div class="mr-8 text-primary-1 text-3xl" @click="closeHandler">
+            <i class="bi bi-x-lg"></i>
           </div>
-          <a href="javascript:;" class="d-flex align-items-center">
+          <p href="javascript:;" class="d-flex align-items-center">
             <span class="mr-2 logo-bg"></span>
-            <h2 class="text-moBlue font-weight-bold logo-title">光南大批發</h2>
-          </a>
+          </p>
         </div>
       </div>
-      <div class="py-2 bg-term link-slider">
-        <div class="d-flex align-items-center flex-nowrap container overflow-auto">
+      <div class="pb-16 text-lg">
+        <div class="d-flex justify-content-between align-items-center px-16">
+          <div v-if="!isAuth" class="d-flex align-items-center">
+            <i class="bi bi-person mr-6"></i>
+            <a :href="realUrl.member" class="text-neutral-0">會員中心</a>
+            <span class="mx-8">/</span>
+            <p @click="logout">登出</p>
+          </div>
+          <div v-else class="d-flex align-items-center">
+            <a :href="realUrl.login" class="text-neutral-0">登入</a>
+            <span class="mx-8">/</span>
+            <a :href="realUrl.register_step1" class="text-neutral-0">註冊</a>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="bi bi-file-earmark-check"></i>
+            <span class="mx-4">詢價單</span>
+            <span v-if="isAuth" class="text-wrong">({{ cartCount }})</span>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-block overflow-auto">
+        <div class="px-16 py-4 text-sm bg-neutral-5 position-sticky" style="top:0px;">網站功能</div>
+        <div class="px-16 divide-y-neutral-4">
           <a 
-            v-for="item in linkUrl" 
+            v-for="item in webFunctionList" 
             :key="item.id"
             :href="item.url"
-            class="mr-3 text-link"
-            @click="linkClick(item)"
-          >{{ item.title }}</a>
+            class="d-flex justify-content-between py-12 text-neutral-0"
+            @click="functionClick(item)"
+          >
+            <span>{{ item.title }}</span>
+            <i class="bi bi-arrow-right"></i>
+          </a>
         </div>
-      </div>
-      <div class="py-3">
-        <div class="d-flex align-items-center container">
-          <i class="fal fa-user-circle fa-lg mr-2 font-weight-bold text-limeGreen"></i>
-          <div class="d-flex align-items-center auth-function" v-if="isAuth" >
-            <a :href="realUrl.member" class="text-dark">會員中心</a>
-            <span class="mx-2">/</span>
-            <a href="javascript:;" class="text-dark" @click="logout">登出</a>
-          </div>
-          <div class="d-flex align-items-center auth-function" v-else>
-            <a :href="realUrl.login" class="text-dark">登入</a>
-            <span class="mx-2">/</span>
-            <a :href="realUrl.register_step1" class="text-dark">註冊</a>
-          </div>
+        <div class="px-16 py-4 text-sm bg-neutral-5 position-sticky" style="top:0px;">商品種類</div>
+        <div class="divide-y-neutral-4">
+          <p
+            v-for="category in categoryList"
+            :key="category.id"
+            class="p-12 category-item"
+            :class="{active:category.categoryId === mainId}"
+            @click="clickCategory(category)"
+          >{{ category.categoryName }}</p>
         </div>
-      </div>
-      <div class="py-1 bg-term">
-        <div class="container text-link" style="font-size:18px;">商品分類</div>
-      </div>
-      <div class="overflow-auto category-block">
-        <a
-          v-for="category in categoryList"
-          :key="category.id"
-          href="javascript:;" 
-          class="d-block w-100 px-3 bd-bottom-divide category-item"
-          :class="{active:category.categoryId === mainId}"
-          @click="clickCategory(category)"
-        >{{ category.categoryName }}</a>
       </div>
     </div>`
 })

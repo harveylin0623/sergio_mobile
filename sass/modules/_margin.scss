@@ -1,4 +1,8 @@
 @each $key, $value in $marginData {
+  .m-#{"" + $key} {
+    margin: $value !important;
+  }
+
   .mt-#{"" + $key} {
     margin-top: $value !important;
   }
@@ -14,6 +18,17 @@
   .ml-#{"" + $key} {
     margin-left: $value !important;
   }
+
+  .mx-#{"" + $key} {
+    margin-left: $value !important;
+    margin-right: $value !important;
+  }
+
+  .my-#{"" + $key} {
+    margin-top: $value !important;
+    margin-bottom: $value !important;
+  }
+
 }
 
 @each $key, $value in $marginData {
