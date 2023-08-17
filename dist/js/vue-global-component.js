@@ -51,30 +51,29 @@ Vue.component('my-header', {
     this.isServer = window.checkIsServer()
   },
   template: `
-    <header id="my-header" class="bg-white">
+    <header id="my-header" class="py-10 bg-neutral-7">
       <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-          <div class="mr-2 text-limeGreen" @click="toggleCategory">
-            <i class="fal fa-bars"></i>
+          <div class="mr-8 text-primary-1 text-4xl" @click="toggleCategory">
+            <i class="bi bi-list"></i>	
           </div>
           <a :href="realUrl.home" class="d-flex align-items-center">
             <span class="mr-2 logo-bg"></span>
-            <h2 class="text-moBlue font-weight-bold logo-title">光南大批發</h2>
           </a>
         </div>
-        <div class="d-flex align-items-center">
-          <a :href="realUrl.notify" class="icon-page-link" v-if="isAuth">
-            <i class="fal fa-bell text-dark"></i>
-            <span class="bg-tomatoRed rounded-circle bell-dot" v-if="showNotifyDot"></span>
-          </a>
-          <a href="javascript:;" class="icon-page-link" @click="toggleKeyword">
-            <i class="fal fa-search text-dark"></i>
+        <div class="d-flex align-items-center space-x-16">
+          <div class="icon-page-link" @click="toggleKeyword">
+            <i class="bi bi-search"></i>
+          </div>
+          <a v-if="isAuth" :href="realUrl.notify" class="icon-page-link">
+            <i class="bi bi-bell"></i>
+            <span v-if="showNotifyDot" class="bg-wrong rounded-circle bell-dot"></span>
           </a>
           <a :href="cartPageUrl" class="icon-page-link">
-            <i class="fal fa-shopping-cart text-dark"></i>
-            <p class="text-white bg-tomatoRed rounded-circle text-center cart-count" v-if="showCartCount">
-              <span>{{ cartCount }}</span>
-            </p>
+            <i class="bi bi-file-earmark-check"></i>
+            <span v-if="showCartCount" class="text-neutral-7 bg-wrong rounded-full text-center cart-count">
+              {{ cartCount }}
+            </span>
           </a>
         </div>
       </div>

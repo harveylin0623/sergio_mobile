@@ -4,15 +4,15 @@
   }
 
   .mr-#{"" + $key} {
-    margin-top: $value !important;
+    margin-right: $value !important;
   }
 
   .mb-#{"" + $key} {
-    margin-top: $value !important;
+    margin-bottom: $value !important;
   }
 
   .ml-#{"" + $key} {
-    margin-top: $value !important;
+    margin-left: $value !important;
   }
 }
 

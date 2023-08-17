@@ -27,8 +27,8 @@ hr {
 
 //===bootstrap rewrite setting
 .container {
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 16px;
+	padding-right: 16px;
 	&.sm {
 		padding-left: 3px;
 		padding-right: 3px;
@@ -36,8 +36,8 @@ hr {
 }
 
 .row {
-	margin-right: -10px;
-	margin-left: -10px;
+	margin-right: -16px;
+	margin-left: -16px;
 	&.sm {
 		margin-left: -3px;
 		margin-right: -3px;

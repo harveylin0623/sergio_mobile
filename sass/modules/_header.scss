@@ -1,45 +1,31 @@
 #my-header {
 	position: sticky;
 	top: 0;
-	padding: 12px 0;
-	box-shadow: map-get($shadow, header);
 	z-index: 1000;
-	.fa-bars {
-		font-size: 22px;		
-	}
 	.logo-bg {
-		@include size(72.28px, 28.57px);
-		background-image: url("../img/knn-logo.jpg");
+		@include size(120px, 32px);
+		background-image: url("../img/header_logo.png");
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center center;
 	}
-	.logo-title {
-		font-size: 20px;
-		@media (max-width: 330px) {
-			display: none;
-		}
-	}
 	.icon-page-link {
 		position: relative;
-		@include elGutter(margin-right, 12px);
-		font-size: 20px;
+		font-size: map-get($fontSize, xl, size);
+		color: map-get($basicColor, neutral-0);
 	}
 	.bell-dot {
 		position: absolute;
-		right: 0;
-		top: 3px;
-		@include size(5px);
+		right: -3px;
+		top: 0px;
+		@include size(8px);
 	}
 	.cart-count {
 		position: absolute;
-		right: -8px;
+		right: -10px;
 		top: -5px;
-		@include size(16px);
+		@include size(22px, 16px);
 		line-height: 16px;
-		font-size: 12px;
-		>span {
-			transform: scale(0.82);
-		}
+		font-size: map-get($fontSize, xs, size);
 	}
 }
