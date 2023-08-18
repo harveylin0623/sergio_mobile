@@ -54,38 +54,34 @@ Vue.component('keyword-sidebar', {
   },
   template: `
     <div id="keywordSidebar" :class="{open:isOpen}">
-      <div class="keyword-header">
-        <div class="container d-flex align-items-center">
-          <div class="mr-2 text-limeGreen" @click="closeHandler">
-            <i class="fal fa-times"></i>
+      <div class="py-10 keyword-header">
+        <div class="d-flex align-items-center px-16">
+          <div class="mr-8 text-primary-1 text-3xl" @click="closeHandler">
+            <i class="bi bi-x-lg"></i>
           </div>
-          <a href="javascript:;" class="d-flex align-items-center">
+          <p class="d-flex align-items-center">
             <span class="mr-2 logo-bg"></span>
-            <h2 class="text-moBlue font-weight-bold logo-title">光南大批發</h2>
-          </a>
+          </p>
         </div>
       </div>
-      <div class="py-3 search-block">
-        <div class="d-flex container">
-          <input type="text" class="form-control" v-model.trim="productKeyword" placeholder="請輸入關鍵字"/>
-          <button class="btn btn-limeGreen" @click="searchHandler">
-            <i class="fal fa-search"></i>
+      <div class="py-16 search-block">
+        <div class="d-flex px-16">
+          <input type="text" v-model.trim="productKeyword" placeholder="請輸入關鍵字"/>
+          <button class="btn btn-a" @click="searchHandler">
+            <i class="bi bi-search"></i>
             <span>搜尋</span>
           </button>
         </div>
       </div>
-      <div class="py-1 bg-term">
-        <div class="container text-link">熱門收尋</div>
-      </div>
+      <div class="px-16 py-4 text-sm bg-neutral-5">熱門搜尋</div>
       <div class="py-3 overflow-auto lists-block">
-        <div class="d-flex flex-wrap container">
-          <a
+        <div class="d-flex flex-wrap px-16 space-x-6">
+          <p
             v-for="item in keywordList"
             :key="item.id"
-            href="javascript:;"
-            class="py-1 px-3 mb-2 mr-2 text-white bg-limeGreen rounded-pill title sm keyword-item"
+            class="px-16 py-4 mb-6 bg-primary-2 text-neutral-7 rounded-full text-sm keyword-item"
             @click="clickKeyword(item)"
-          >{{ item.keyword }}</a>
+          >{{ item.keyword }}</p>
         </div>
       </div>
     </div>`

@@ -2,8 +2,8 @@
   position: fixed;
   left: 0;
   top: 0;
-  @include size(100%, 100vh);
-  background-color: #fff;
+  @include size(100%, 100dvh);
+  background-color: map-get($basicColor, neutral-7);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.15s ease, visibility 0.15s ease;
@@ -13,20 +13,13 @@
     visibility: visible;
   }
   >.keyword-header {
-    padding: 12px 0;
     box-shadow: map-get($shadow, header);
-    .fa-times {
-      font-size: 30px;
-    }
     .logo-bg {
-      @include size(72.28px, 28.57px);
-      background-image: url("../img/knn-logo.jpg");
+      @include size(120px, 32px);
+      background-image: url("../img/header_logo.png");
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center center;
-    }
-    .logo-title {
-      font-size: 20px;
     }
   }
   >.search-block {
@@ -34,19 +27,19 @@
       flex: 1;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
-      border-top-left-radius: 17px;
-      border-bottom-left-radius: 17px;
+      border-top-left-radius: map-get($radius, full);
+      border-bottom-left-radius: map-get($radius, full);
     }
     button {
       flex: 0 0 80px;
-      border-top-right-radius: 17px;
-      border-bottom-right-radius: 17px;
+      border-top-right-radius: map-get($radius, full);
+      border-bottom-right-radius: map-get($radius, full);
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
   }
   >.lists-block {
-    height: calc(100vh - 56px - 70px - 32px);
+    height: calc(100dvh - 56px - 68px - 28px);
     .keyword-item {
       white-space: nowrap;
     }

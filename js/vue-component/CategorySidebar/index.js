@@ -79,7 +79,7 @@ Vue.component('category-sidebar', {
           <div class="mr-8 text-primary-1 text-3xl" @click="closeHandler">
             <i class="bi bi-x-lg"></i>
           </div>
-          <p href="javascript:;" class="d-flex align-items-center">
+          <p class="d-flex align-items-center">
             <span class="mr-2 logo-bg"></span>
           </p>
         </div>
