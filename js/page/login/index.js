@@ -6,12 +6,23 @@ export default function({ apiUrl, pageUrl }) {
     data: {
       user: { account: '', password: '', isKeep: false },
       redirectUrl: '',
-      tipInfo: { status: false, message: '' },
+      tipInfo: { status: false, message: '', isOpen: false },
       isLoading: false,
       apiUrl,
       pageUrl
     },
     methods: {
+      saveUserData(payload) {
+        window.storageObj.setItem(this.authKey, {
+          ...payload.memberProfile,
+          token: payload.aaData.access_token,
+          member_status: payload.member_status
+        })
+      },
+      setRedirectUrl() {
+        let payload = window.sessionStorageObj.getItem('backUrl')
+        this.redirectUrl = payload !== null ? payload.url : this.pageUrl.home
+      },
       async submitHandler() {
         let isValid = await this.$refs.form.validate()
         if (!isValid) return
@@ -26,23 +37,15 @@ export default function({ apiUrl, pageUrl }) {
         })
         this.tipInfo.status = response.status === 1
         this.tipInfo.message = response.message
+        this.tipInfo.isOpen = true
         if (this.tipInfo.status) {
           this.saveUserData(response)
           this.setRedirectUrl()
         }
-        $('#tipPopup').modal('show')
         this.isLoading = false
       },
-      saveUserData(payload) {
-        window.storageObj.setItem(this.authKey, {
-          ...payload.memberProfile,
-          token: payload.aaData.access_token,
-          member_status: payload.member_status
-        })
-      },
-      setRedirectUrl() {
-        let payload = window.sessionStorageObj.getItem('backUrl')
-        this.redirectUrl = payload !== null ? payload.url : this.pageUrl.home
+      confirmHandler() {
+        if (this.tipInfo.status) location.href = this.redirectUrl
       }
     },
     mounted() {

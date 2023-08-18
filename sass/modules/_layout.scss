@@ -28,6 +28,7 @@ hr {
 
 //===bootstrap rewrite setting
 .container {
+	max-width: 600px;
 	padding-left: 16px;
 	padding-right: 16px;
 	&.sm {
@@ -55,6 +56,20 @@ hr {
 }
 
 //===page
+.content-section {
+	min-height: 55vh;
+	padding-top: map-get($paddingData, 20) ;
+	&.no-padding {
+		padding-top: 0;
+	}
+}
+
+.page-title {
+	margin-bottom: map-get($marginData, 20);
+	color: map-get($basicColor, primary-1);
+	text-align: center;
+}
+
 .product-row {
 	display: flex;
 	flex-wrap: wrap;
@@ -64,6 +79,18 @@ hr {
 	>*:nth-child(even) {
 		padding-left: map-get($marginData, 8);
 	}
+}
+
+.error-msg {
+	color: map-get($basicColor, error-text);
+	font-size: map-get($fontSize, xs, size);
+	text-align: right;
+}
+
+.full-img {
+	display: block;
+	@include size(100%);
+	object-fit: cover;
 }
 
 .centerFlex {
@@ -76,21 +103,6 @@ hr {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-}
-
-.content-section {
-	min-height: 55vh;
-	padding-top: 25px;
-	padding-bottom: 1px;
-	&.no-padding {
-		padding-top: 0;
-	}
-}
-
-.page-title {
-	margin-bottom: 24px;
-	text-align: center;
-	font-weight: normal;
 }
 
 .title {
@@ -133,17 +145,6 @@ hr {
 
 #dateInput {
 	background-color: #fff;
-}
-
-.full-img {
-	display: block;
-	@include size(100%);
-	object-fit: cover;
-}
-
-.error-msg {
-	color: map-get($basicColor, tomatoRed);
-	font-size: 12px;
 }
 
 .edit-block {

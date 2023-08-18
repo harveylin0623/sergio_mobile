@@ -71,6 +71,9 @@ input[type=checkbox] {
 			opacity: 1;
 		}
 	}
+	&:focus {
+		box-shadow: none;
+	}
 }
 
 input[type=radio] {

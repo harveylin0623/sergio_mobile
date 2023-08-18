@@ -1,5 +1,5 @@
 %button {
-	width: var(--w, revert);
+	width: var(--w, 100%);
 	height: var(--h, 36px);
 	border-radius: map-get($radius, sm);
 	font-size: map-get($fontSize, sm, size);

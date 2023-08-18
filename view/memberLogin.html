@@ -8,7 +8,7 @@
 	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
 	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
 	<title>登入</title>
-	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../libs/bootstrapIcon/bootstrap-icons.min.css">
 	<link rel="stylesheet" href="../dist/css/vendor.min.css">
 	<link rel="stylesheet" href="../css/main.css" />
 	<script src="../libs/vue/vue.js"></script>
@@ -30,74 +30,81 @@
 		<section class="content-section">
 			<div class="container">
 				<h2 class="page-title">會員登入</h2>
-				<div class="formCnt">
-					<validation-observer class="mb-3" tag="div" ref="form">
-						<div class="mb-2 form-group">
-							<div class="mb-0 text-center text-link title sm">如果已經是會員，登入即可快速結帳 / 查看訂單 / 修改個人資訊及更多功能。</div>
+				<div class="mb-10 text-center text-sm">如果已經是會員，登入即可快速結帳 / 查看訂單 / 修改個人資訊及更多功能。</div>
+
+				<validation-observer class="mb-16 space-y-10" tag="div" ref="form">
+					<validation-provider tag="div" rules="required|phone" v-slot="{ errors,failed }">
+						<label class="text-sm">
+							<span class="text-error-text">*</span>帳號
+						</label>
+						<input
+							:class="{invalid:failed}"
+							v-model.trim="user.account" 
+							@keyup.enter="submitHandler"
+							type="text" 
+							inputmode="numeric" 
+							placeholder="請輸入帳號，帳號為手機號碼"
+						/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<validation-provider tag="div" rules="required|password" v-slot="{ errors,failed }">
+						<label class="text-sm">
+							<span class="text-error-text">*</span>密碼
+						</label>
+						<input 
+							:class="{invalid:failed}"
+							v-model.trim="user.password" 
+							@keyup.enter="submitHandler"
+							type="password" 
+							placeholder="請輸入6~12英數字密碼"
+						/>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<div class="d-flex">
+						<div class="d-flex align-items-center flex-grow-1">
+							<input
+								id="a"
+								v-model="user.isKeep"
+								type="checkbox" 
+							/>
+							<label class="ml-4 text-sm" for="a">記住我的資訊</label>
 						</div>
-						<validation-provider tag="div" class="mb-2 form-group" rules="required|phone"
-							v-slot="{ errors,failed }">
-							<label class="title sm">
-								<span class="text-tomatoRed">*</span>帳號
-							</label>
-							<input type="number" class="form-control" placeholder="請輸入帳號，帳號為手機號碼"
-								inputmode="numeric" v-model.trim="user.account" @keyup.enter="submitHandler"/>
-							<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
-						</validation-provider>
-						<validation-provider tag="div" class="mb-2 form-group" rules="required|password"
-							v-slot="{ errors,failed }">
-							<label class="title sm">
-								<span class="text-tomatoRed">*</span>密碼
-							</label>
-							<input type="password" class="form-control" placeholder="請輸入6~12英數字密碼"
-								v-model.trim="user.password" @keyup.enter="submitHandler"/>
-								<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
-						</validation-provider>
-						<div class="mb-2 form-row">
-							<div class="col-6">
-								<div class="form-check">
-									<input type="checkbox" class="form-check-input" id="exampleCheck1"
-										v-model="user.isKeep">
-									<label class="mb-0 form-check-label title sm" for="exampleCheck1">記住我的資訊</label>
-								</div>
-							</div>
-							<div class="col-6 text-right">
-								<a :href="pageUrl.forget_password_step1" class="text-moBlue title sm">
-									<i class="fal fa-question-circle"></i> 忘記密碼
-								</a>
-							</div>
+						<div class="flex-grow-1 text-right">
+							<a 
+								:href="pageUrl.forget_password_step1" 
+								class="text-primary-1 text-sm">
+								忘記密碼<i class="bi bi-question-lg"></i>
+							</a>
 						</div>
-						<button class="btn btn-limeGreen w-100" @click="submitHandler">登入</button>
-						<hr>
-						<div class="mb-2 text-center text-link title sm">還不是會員?</div>
-						<a :href="pageUrl.register_step1" class="d-block btn btn-outline-limeGreen">註冊光南會員</a>
-					</validation-observer>
-				</div>
+					</div>
+					<button class="btn btn-a" @click="submitHandler">登入</button>
+					<hr class="mb-10">
+					<div class="text-primary-1 text-center text-sm">
+						還不是會員<i class="bi bi-question-lg"></i>
+					</div>
+					<a 
+						:href="pageUrl.register_step1" 
+						class="btn btn-outline-a">註冊光南會員</a>
+				</validation-observer>
 			</div>
 		</section>
 
-		<div class="modal fade" id="tipPopup" data-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header mx-auto">
-						<h2>提示</h2>
-					</div>
-					<div class="modal-body">
-						<p class="text-center">{{ tipInfo.message }}</p>
-					</div>
-					<div class="modal-footer">
-						<a :href="redirectUrl" class="btn btn-limeGreen mx-auto limit" v-if="tipInfo.status">確認</a>
-						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-else>確認</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<tip-modal 
+			ref="tipModal1"
+			:is-open.sync="tipInfo.isOpen"
+			:status="tipInfo.status"
+			:content="tipInfo.message"
+			@confirm="confirmHandler"
+		></tip-modal>
 
 		<app-download-modal></app-download-modal>
 
 		<loading v-show="isLoading"></loading>
 
 		<my-footer></my-footer>
+
+		<warning-slogan></warning-slogan>
+
 	</div>
 
 	<script type="module">

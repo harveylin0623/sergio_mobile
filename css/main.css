@@ -62,7 +62,7 @@ a:focus {
 }
 
 .btn-outline-b, .btn-outline-a, .btn-c, .btn-b, .btn-a {
-  width: var(--w, revert);
+  width: var(--w, 100%);
   height: var(--h, 36px);
   border-radius: 2px;
   font-size: 14px;
@@ -1025,6 +1025,36 @@ a:focus {
   border-top: 1px solid #D2303B;
 }
 
+.text-error-text {
+  color: #E60012 !important;
+}
+
+.bg-error-text {
+  background-color: #E60012 !important;
+}
+
+.bd-error-text {
+  border-style: solid;
+  border-color: #E60012 !important;
+  border-width: 1px;
+}
+
+.bd-top-error-text {
+  border-top: 1px solid #E60012;
+}
+
+.bd-bottom-error-text {
+  border-bottom: 1px solid #E60012;
+}
+
+.bd-right-error-text {
+  border-right: 1px solid #E60012;
+}
+
+.divide-y-error-text > * + * {
+  border-top: 1px solid #E60012;
+}
+
 .text-xs {
   font-size: 12px;
   line-height: 16px;
@@ -1193,6 +1223,7 @@ hr {
 }
 
 .container {
+  max-width: 600px;
   padding-left: 16px;
   padding-right: 16px;
 }
@@ -1219,6 +1250,20 @@ hr {
   padding-right: 3px;
 }
 
+.content-section {
+  min-height: 55vh;
+  padding-top: 20px;
+}
+.content-section.no-padding {
+  padding-top: 0;
+}
+
+.page-title {
+  margin-bottom: 20px;
+  color: #68566A;
+  text-align: center;
+}
+
 .product-row {
   display: flex;
   flex-wrap: wrap;
@@ -1228,6 +1273,20 @@ hr {
 }
 .product-row > *:nth-child(even) {
   padding-left: 8px;
+}
+
+.error-msg {
+  color: #E60012;
+  font-size: 12px;
+  text-align: right;
+}
+
+.full-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .centerFlex {
@@ -1240,21 +1299,6 @@ hr {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.content-section {
-  min-height: 55vh;
-  padding-top: 25px;
-  padding-bottom: 1px;
-}
-.content-section.no-padding {
-  padding-top: 0;
-}
-
-.page-title {
-  margin-bottom: 24px;
-  text-align: center;
-  font-weight: normal;
 }
 
 .title {
@@ -1294,18 +1338,6 @@ hr {
 
 #dateInput {
   background-color: #fff;
-}
-
-.full-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-
-.error-msg {
-  font-size: 12px;
 }
 
 .edit-block {
@@ -1771,6 +1803,9 @@ input[type=checkbox]::after {
 }
 input[type=checkbox]:checked::before, input[type=checkbox]:checked::after {
   opacity: 1;
+}
+input[type=checkbox]:focus {
+  box-shadow: none;
 }
 
 input[type=radio] {

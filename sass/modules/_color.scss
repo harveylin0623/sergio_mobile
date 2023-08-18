@@ -34,6 +34,9 @@ $colorMap: (
 	),
 	wrong: (
 		color: map-get($basicColor, wrong)
+	),
+	error-text: (
+		color: map-get($basicColor, error-text)
 	)
 );
 

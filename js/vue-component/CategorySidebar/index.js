@@ -86,7 +86,7 @@ Vue.component('category-sidebar', {
       </div>
       <div class="pb-16 text-lg">
         <div class="d-flex justify-content-between align-items-center px-16">
-          <div v-if="!isAuth" class="d-flex align-items-center">
+          <div v-if="isAuth" class="d-flex align-items-center">
             <i class="bi bi-person mr-6"></i>
             <a :href="realUrl.member" class="text-neutral-0">會員中心</a>
             <span class="mx-8">/</span>
