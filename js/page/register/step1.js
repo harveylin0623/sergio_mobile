@@ -10,7 +10,11 @@ export default function ({ apiUrl, pageUrl }) {
       tipInfo: { message: '' },
       isLoading: false,
       apiUrl,
-      pageUrl
+      pageUrl,
+      stepList: [
+        { text: '填寫資料', done: false },
+        { text: '手機驗證', done: false },
+      ]
     },
     computed: {
       totalTerms() {

@@ -47,7 +47,7 @@ a:focus {
   text-decoration: none;
 }
 
-.input-number-component > .dir, .stepCnt, .check-ball {
+.input-number-component > .dir, .check-ball {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -453,6 +453,36 @@ a:focus {
 
 .space-y-40 > * + * {
   margin-top: 40px;
+}
+
+.p-2 {
+  padding: 2px !important;
+}
+
+.pt-2 {
+  padding-top: 2px !important;
+}
+
+.pr-2 {
+  padding-right: 2px !important;
+}
+
+.pb-2 {
+  padding-bottom: 2px !important;
+}
+
+.pl-2 {
+  padding-left: 2px !important;
+}
+
+.px-2 {
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
+
+.py-2 {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
 }
 
 .p-4 {
@@ -2219,73 +2249,43 @@ input[type=radio]:checked::after {
   font-size: 14px;
 }
 
-.stepCnt {
-  margin-bottom: 20px;
-}
-.stepCnt .sItem {
-  position: relative;
+.step-block {
   display: flex;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 16px;
 }
-.stepCnt .sItem .cube {
+.step-block .step-item .number {
   width: 40px;
   height: 40px;
+  line-height: 40px;
+  margin: 0 auto;
   text-align: center;
-  line-height: 36px;
-  font-size: 18px;
-  font-weight: bold;
-  border: 2px solid #eee;
-  background-color: #eee;
-  border-radius: 50%;
-  color: #bbb;
+  background-color: #C9C9C9;
+  color: #FFFFFF;
+  border-radius: 1000px;
 }
-.stepCnt .sItem .text {
-  font-size: 14px;
-  color: #ccc;
+.step-block .step-item .text {
+  padding-top: 2px;
+  font-size: 12px;
+  color: #797979;
 }
-.stepCnt .sItem.ing .cube {
-  background-color: #fff;
+.step-block .step-item.done .number {
+  background-color: #A174A6;
 }
-.stepCnt .sItem.done .cube {
-  color: #ffffff;
+.step-block .step-item.done .text {
+  color: #A174A6;
 }
-.stepCnt .sLine {
+.step-block .step-line {
+  background-color: #C9C9C9;
   width: 80px;
   height: 3px;
-  margin: 0 -8px;
-  -webkit-transform: translateY(-10px);
-          transform: translateY(-10px);
-  background-color: #eee;
+  margin-top: -20px;
+  margin-left: -4px;
+  margin-right: -4px;
 }
-.stepCnt.dot {
-  margin-left: 30px;
-  margin-right: 30px;
-}
-.stepCnt.dot .cube {
-  width: 20px;
-  height: 20px;
-  border-width: 4px;
-  border-color: #888;
-  background-color: #fff !important;
-}
-.stepCnt.dot .text {
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  width: 60px;
-  margin: 0 0 0 -30px;
-  font-size: 15px;
-  text-align: center;
-  color: #666;
-}
-.stepCnt.dot .sLine {
-  width: 140px;
-  background-color: #ccc;
-}
-.stepCnt.sm .sLine {
-  width: 70px;
-  margin: 0;
+.step-block .step-line.done {
+  background-color: #A174A6;
 }
 
 .swiper {

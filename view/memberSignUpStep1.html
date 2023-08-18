@@ -8,7 +8,7 @@
 	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
 	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
 	<title>註冊(1)</title>
-	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../libs/bootstrapIcon/bootstrap-icons.min.css">
 	<link rel="stylesheet" href="../dist/css/vendor.min.css">
 	<link rel="stylesheet" href="../css/main.css" />
 	<script src="../libs/vue/vue.js"></script>
@@ -29,19 +29,11 @@
 
 		<div class="content-section">
 			<div class="container">
-				<h2 class="page-title">會員註冊</h2>
+				<h2 class="page-title">會員登入</h2>
+
+				<step-block :step-list="stepList"></step-block>
+
 				<div class="formCnt">
-					<div class="stepCnt">
-						<div class="sItem ing">
-							<div class="cube">1</div>
-							<div class="text">填寫資料</div>
-						</div>
-						<div class="sLine"></div>
-						<div class="sItem">
-							<div class="cube">2</div>
-							<div class="text">手機驗證</div>
-						</div>
-					</div>
 					<div>
 						<validation-observer tag="div" ref="form">
 							<div class="form-row">
@@ -235,13 +227,18 @@
 			</div>
 		</div>
 
+		<tip-modal ref="tipModal1"></tip-modal>
+
 		<app-download-modal></app-download-modal>
 
 		<loading v-show="isLoading"></loading>
 
 		<my-footer></my-footer>
+
 	</div>
 
+	<script src="../js/vue-component/StepBlock/index.js"></script>
+	<script src="../js/vue-component/StepBlock/StepItem.js"></script>
 	<script type="module">
 		import '../js/vue-component/Term/RegisterTerm.js'
 		import app from '../js/page/register/step1.js'
