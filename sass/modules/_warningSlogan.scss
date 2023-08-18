@@ -1,0 +1,14 @@
+$sloganHeight: 68px;
+
+#slogan-wrap {
+  height: $sloganHeight;
+  .slogan-content {
+    height: $sloganHeight;
+    z-index: 2;
+    .icon {
+      @include size(28px);
+      background-image: url("../img/disallow.png");
+      background-size: contain;
+    }
+  }
+}

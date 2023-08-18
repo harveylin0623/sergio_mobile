@@ -149,7 +149,8 @@ const options = {
 					'js/vue-component/CategorySidebar/index.js',
 					'js/vue-component/KeywordSidebar/index.js',
 					'js/vue-component/ActivityPickedRow/index.js',
-					'js/vue-component/InputNumber/index.js'
+					'js/vue-component/InputNumber/index.js',
+					'js/vue-component/WarningSlogan/index.js'
 				],
 				'js/cart-page-component.js': [
 					'js/vue-component/CartRow/NormalCartRow.js',

@@ -74,7 +74,7 @@ Vue.component('category-sidebar', {
   },
   template: `
     <div id="categorySidebar" :class="{open:isOpen}">
-      <div class="py-12 category-header">
+      <div class="py-10 category-header">
         <div class="d-flex align-items-center px-16">
           <div class="mr-8 text-primary-1 text-3xl" @click="closeHandler">
             <i class="bi bi-x-lg"></i>

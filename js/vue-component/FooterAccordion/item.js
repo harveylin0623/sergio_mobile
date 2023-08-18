@@ -22,7 +22,7 @@ Vue.component('footer-accordion-item', {
           <i v-show="isOpen" class="bi bi-dash"></i>
         </p>
       </div>
-      <div v-show="isOpen" class="pl-8">
+      <div v-show="isOpen">
         <a
           v-for="item in accordion.lists"
           :key="item.id"

@@ -53,7 +53,7 @@ Vue.component('my-header', {
     this.isServer = window.checkIsServer()
   },
   template: `
-    <header id="my-header" class="py-12 bg-neutral-7">
+    <header id="my-header" class="py-10 bg-neutral-7">
       <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
           <div class="mr-8 text-primary-1 text-4xl" @click="toggleCategory">
@@ -189,7 +189,7 @@ Vue.component('footer-accordion-item', {
           <i v-show="isOpen" class="bi bi-dash"></i>
         </p>
       </div>
-      <div v-show="isOpen" class="pl-8">
+      <div v-show="isOpen">
         <a
           v-for="item in accordion.lists"
           :key="item.id"
@@ -1432,7 +1432,7 @@ Vue.component('category-sidebar', {
   },
   template: `
     <div id="categorySidebar" :class="{open:isOpen}">
-      <div class="py-12 category-header">
+      <div class="py-10 category-header">
         <div class="d-flex align-items-center px-16">
           <div class="mr-8 text-primary-1 text-3xl" @click="closeHandler">
             <i class="bi bi-x-lg"></i>
@@ -1735,6 +1735,21 @@ Vue.component('input-number', {
       >
       <div class="dir" @click="stepHandler(1)">
         <i class="fal fa-plus text-link"></i>
+      </div>
+    </div>`
+})
+Vue.component('warning-slogan', {
+  data: () => ({
+    textList: ['禁', '止', '酒', '駕', '', '飲', '酒', '過', '量', '有', '害', '健', '康']
+  }),
+  template: `
+    <div id="slogan-wrap">
+      <div class="fixed-bottom d-flex justify-content-around align-items-center bg-neutral-0 text-neutral-7 slogan-content">
+        <p 
+          v-for="(text,index) in textList"
+          :key="index"
+          :class="{icon:index === 4}"
+        >{{ text }}</p>
       </div>
     </div>`
 })

@@ -1939,6 +1939,20 @@ input[type=radio]:checked::after {
   background-repeat: no-repeat;
 }
 
+#slogan-wrap {
+  height: 68px;
+}
+#slogan-wrap .slogan-content {
+  height: 68px;
+  z-index: 2;
+}
+#slogan-wrap .slogan-content .icon {
+  width: 28px;
+  height: 28px;
+  background-image: url("../img/disallow.png");
+  background-size: contain;
+}
+
 .activity-cart-item.invalid::after, .normal-cart-item.invalid::after {
   content: "";
   display: block;
