@@ -35,9 +35,8 @@ Vue.component('my-footer', {
           name: '關於我們',
           id: 'c',
           lists: [
-            { id: 'c-1', title: '關於光南線上購', url: this.realUrl.about_knn, target: '_self' },
-            { id: 'c-2', title: '官方網站', url: 'http://www.knn.com.tw/', target: '_blank' },
-            { id: 'c-3', title: '門市資訊', url: 'https://www.knn.com.tw/%E9%96%80%E5%B8%82%E8%B3%87%E8%A8%8A', target: '_blank' },
+            { id: 'c-2', title: '官方網站', url: 'javascript:;', target: '_blank' },
+            { id: 'c-3', title: '門市資訊', url: 'javascript:;', target: '_blank' },
             { id: 'c-4', title: '聯絡我們', url: this.realUrl.contactUs, target: '_self' }
           ]
         }
@@ -48,23 +47,20 @@ Vue.component('my-footer', {
     this.isServer = window.checkIsServer()
   },
   template: `
-    <footer id="my-footer">
+    <footer id="my-footer" class="pt-16 bg-neutral-1">
       <div class="container">
         <footer-accordion :accordion-data="accordionData"></footer-accordion>
-        <div class="d-flex justify-content-between align-items-start my-3">
-          <div class="text-white">光南APP</div>
-          <div class="d-flex justify-content-center align-items-center">
+        <div class="my-20">
+          <div class="mb-16 text-neutral-7">下載 APP</div>
+          <div class="d-flex justify-content-between align-items-center">
             <div>
-              <a href="https://itunes.apple.com/app/id1617019958" class="d-block mb-1 apple-store" target="_blank"></a>
-              <a href="https://play.google.com/store/apps/details?id=com.knn.app" class="d-block android-store" tagret="_blank"></a>
+              <a href="javascript:;" class="d-block mb-8 apple-store" target="_blank"></a>
+              <a href="javascript:;" class="d-block android-store" tagret="_blank"></a>
             </div>
-            <div class="ml-2 qrcode-bg"></div>
+            <div class="qrcode-bg"></div>
           </div>
         </div>
-        <div class="copyright">
-          <p class="text-center text-white">光南大批發 knn.com.tw</p>
-          <p class="text-center text-white">版權所有 {{ copyrightYear }} copyright © 光南大批發(笑笑笑國際股份有限公司)</p>
-        </div>
+        <p class="pb-10 text-center text-neutral-7 text-xs">© 版權所有 copyright</p>
       </div>
     </footer>`
 })

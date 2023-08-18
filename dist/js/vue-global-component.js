@@ -118,9 +118,8 @@ Vue.component('my-footer', {
           name: '關於我們',
           id: 'c',
           lists: [
-            { id: 'c-1', title: '關於光南線上購', url: this.realUrl.about_knn, target: '_self' },
-            { id: 'c-2', title: '官方網站', url: 'http://www.knn.com.tw/', target: '_blank' },
-            { id: 'c-3', title: '門市資訊', url: 'https://www.knn.com.tw/%E9%96%80%E5%B8%82%E8%B3%87%E8%A8%8A', target: '_blank' },
+            { id: 'c-2', title: '官方網站', url: 'javascript:;', target: '_blank' },
+            { id: 'c-3', title: '門市資訊', url: 'javascript:;', target: '_blank' },
             { id: 'c-4', title: '聯絡我們', url: this.realUrl.contactUs, target: '_self' }
           ]
         }
@@ -131,23 +130,20 @@ Vue.component('my-footer', {
     this.isServer = window.checkIsServer()
   },
   template: `
-    <footer id="my-footer">
+    <footer id="my-footer" class="pt-16 bg-neutral-1">
       <div class="container">
         <footer-accordion :accordion-data="accordionData"></footer-accordion>
-        <div class="d-flex justify-content-between align-items-start my-3">
-          <div class="text-white">光南APP</div>
-          <div class="d-flex justify-content-center align-items-center">
+        <div class="my-20">
+          <div class="mb-16 text-neutral-7">下載 APP</div>
+          <div class="d-flex justify-content-between align-items-center">
             <div>
-              <a href="https://itunes.apple.com/app/id1617019958" class="d-block mb-1 apple-store" target="_blank"></a>
-              <a href="https://play.google.com/store/apps/details?id=com.knn.app" class="d-block android-store" tagret="_blank"></a>
+              <a href="javascript:;" class="d-block mb-8 apple-store" target="_blank"></a>
+              <a href="javascript:;" class="d-block android-store" tagret="_blank"></a>
             </div>
-            <div class="ml-2 qrcode-bg"></div>
+            <div class="qrcode-bg"></div>
           </div>
         </div>
-        <div class="copyright">
-          <p class="text-center text-white">光南大批發 knn.com.tw</p>
-          <p class="text-center text-white">版權所有 {{ copyrightYear }} copyright © 光南大批發(笑笑笑國際股份有限公司)</p>
-        </div>
+        <p class="pb-10 text-center text-neutral-7 text-xs">© 版權所有 copyright</p>
       </div>
     </footer>`
 })
@@ -155,57 +151,51 @@ Vue.component('footer-accordion', {
   props: {
     accordionData: { type: Array, required: true }
   },
-  methods: {
-    closeOther(payload) {
-      let { id, isOpen } = payload
-      if (!isOpen) return
-      this.$refs.items.forEach(item => {
-        if (item.accordion.id !== id) item.isOpen = false
-      })
-    }
-  },
+  data: () => ({
+    activeId: ''
+  }),
   template: `
     <div class="footer-accordion">
       <footer-accordion-item
+        ref="items"
         v-for="accordion in accordionData"
         :key="accordion.id"
-        ref="items"
         :accordion="accordion"
-        @close-other="closeOther"
+        :active-id.sync="activeId"
       ></footer-accordion-item>
     </div>`
 })
 Vue.component('footer-accordion-item', {
   props: {
-    accordion: { type: Object, required: true }
+    accordion: { type: Object, required: true },
+    activeId: { type: String, required: true }
   },
-  data() {
-    return {
-      isOpen: false
+  computed: {
+    isOpen() {
+      return this.accordion.id === this.activeId
     }
   },
   methods: {
     toggleHandler() {
-      this.isOpen = !this.isOpen
-      this.$emit('close-other', { id: this.accordion.id, isOpen: this.isOpen })
+      this.$emit('update:activeId', this.isOpen ? '' : this.accordion.id)
     }
   },
   template: `
-    <div class="mb-2 accordion-item">
-      <div class="d-flex justify-content-between align-items-center pb-2 mb-2 accordion-header" @click="toggleHandler">
-        <p class="text-white">{{ accordion.name }}</p>
-        <span class="text-limeGreen">
-          <i class="fal fa-plus" v-show="!isOpen"></i>
-          <i class="fal fa-minus" v-show="isOpen"></i>
-        </span>
+    <div class="accordion-item">
+      <div class="d-flex justify-content-between align-items-center pb-8 mb-8 accordion-header" @click="toggleHandler">
+        <p class="text-neutral-7">{{ accordion.name }}</p>
+        <p class="text-neutral-7 text-lg">
+          <i v-show="!isOpen" class="bi bi-plus"></i>
+          <i v-show="isOpen" class="bi bi-dash"></i>
+        </p>
       </div>
-      <div class="pl-2 accordion-content" v-show="isOpen">
+      <div v-show="isOpen" class="pl-8">
         <a
           v-for="item in accordion.lists"
           :key="item.id"
           :href="item.url"
           :target="item.target"
-          class="d-block mb-2"
+          class="d-block mb-8 text-neutral-3 text-sm"
         >{{ item.title }}</a>
       </div>
     </div>`

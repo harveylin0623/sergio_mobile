@@ -21,7 +21,7 @@
 				border: none;
 				.qrcode {
 					@include size(180px);
-					background-image: url("../img/knn-qrcode.png");
+					background-image: url("../img/web-qrcode.png");
 					background-position: center center;
 					background-size: contain;
 				}

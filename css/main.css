@@ -1823,7 +1823,7 @@ input[type=radio]:checked::after {
 .modal .modal-dialog .modal-content .modal-body .qrcode {
   width: 180px;
   height: 180px;
-  background-image: url("../img/knn-qrcode.png");
+  background-image: url("../img/web-qrcode.png");
   background-position: center center;
   background-size: contain;
 }
@@ -1914,41 +1914,29 @@ input[type=radio]:checked::after {
   font-size: 12px;
 }
 
-#my-footer {
-  padding: 15px 0;
-  background-color: #3f3f3f;
-}
 #my-footer .footer-accordion .accordion-header {
   border-bottom: 1px solid #4e4e4e;
 }
-#my-footer .footer-accordion .accordion-content > a {
-  color: #828282;
-}
-#my-footer .footer-accordion .accordion-content > a:last-child {
-  margin-bottom: 0 !important;
-}
 #my-footer .qrcode-bg {
-  width: 90px;
-  height: 90px;
-  background-image: url("../img/knn-qrcode.png");
+  width: 100px;
+  height: 100px;
+  background-image: url("../img/web-qrcode.png");
   background-size: contain;
+  border-radius: 8px;
 }
 #my-footer .apple-store {
-  width: 115px;
-  height: 41px;
+  width: 132px;
+  height: 40px;
   background-image: url("../img/apple.png");
-  background-size: contain;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 #my-footer .android-store {
-  width: 115px;
-  height: 41px;
+  width: 132px;
+  height: 40px;
   background-image: url("../img/android.png");
   background-size: contain;
   background-repeat: no-repeat;
-}
-#my-footer .copyright {
-  font-size: 12px;
 }
 
 .activity-cart-item.invalid::after, .normal-cart-item.invalid::after {

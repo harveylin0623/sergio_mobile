@@ -1,34 +1,34 @@
 Vue.component('footer-accordion-item', {
   props: {
-    accordion: { type: Object, required: true }
+    accordion: { type: Object, required: true },
+    activeId: { type: String, required: true }
   },
-  data() {
-    return {
-      isOpen: false
+  computed: {
+    isOpen() {
+      return this.accordion.id === this.activeId
     }
   },
   methods: {
     toggleHandler() {
-      this.isOpen = !this.isOpen
-      this.$emit('close-other', { id: this.accordion.id, isOpen: this.isOpen })
+      this.$emit('update:activeId', this.isOpen ? '' : this.accordion.id)
     }
   },
   template: `
-    <div class="mb-2 accordion-item">
-      <div class="d-flex justify-content-between align-items-center pb-2 mb-2 accordion-header" @click="toggleHandler">
-        <p class="text-white">{{ accordion.name }}</p>
-        <span class="text-limeGreen">
-          <i class="fal fa-plus" v-show="!isOpen"></i>
-          <i class="fal fa-minus" v-show="isOpen"></i>
-        </span>
+    <div class="accordion-item">
+      <div class="d-flex justify-content-between align-items-center pb-8 mb-8 accordion-header" @click="toggleHandler">
+        <p class="text-neutral-7">{{ accordion.name }}</p>
+        <p class="text-neutral-7 text-lg">
+          <i v-show="!isOpen" class="bi bi-plus"></i>
+          <i v-show="isOpen" class="bi bi-dash"></i>
+        </p>
       </div>
-      <div class="pl-2 accordion-content" v-show="isOpen">
+      <div v-show="isOpen" class="pl-8">
         <a
           v-for="item in accordion.lists"
           :key="item.id"
           :href="item.url"
           :target="item.target"
-          class="d-block mb-2"
+          class="d-block mb-8 text-neutral-3 text-sm"
         >{{ item.title }}</a>
       </div>
     </div>`
