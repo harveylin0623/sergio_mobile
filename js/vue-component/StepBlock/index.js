@@ -1,6 +1,7 @@
 Vue.component('step-block', {
   props: {
-    stepList: { type: Array, required: true }
+    stepList: { type: Array, required: true },
+    currentStepIndex: { type: Number, default: 1 }
   },
   computed: {
     stepCount() {
@@ -13,6 +14,7 @@ Vue.component('step-block', {
         v-for="(step,index) in stepList"
         :key="index"
         :step-index="index"
+        :current-step-index="currentStepIndex"
         :step-count="stepCount"
         :step="step"
       ></step-item>

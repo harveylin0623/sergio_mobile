@@ -2260,32 +2260,39 @@ input[type=radio]:checked::after {
   height: 40px;
   line-height: 40px;
   margin: 0 auto;
-  text-align: center;
+  border: 1px solid #C9C9C9;
   background-color: #C9C9C9;
   color: #FFFFFF;
   border-radius: 1000px;
+  text-align: center;
 }
 .step-block .step-item .text {
   padding-top: 2px;
-  font-size: 12px;
   color: #797979;
 }
+.step-block .step-item.current .number {
+  border: 1px solid #68566A;
+  background-color: #68566A;
+  color: #FFFFFF;
+}
+.step-block .step-item.current .text {
+  color: #68566A;
+}
 .step-block .step-item.done .number {
-  background-color: #A174A6;
+  border-color: #A174A6;
+  background-color: #FFFFFF;
+  color: #A174A6;
 }
 .step-block .step-item.done .text {
   color: #A174A6;
 }
 .step-block .step-line {
-  background-color: #C9C9C9;
   width: 80px;
-  height: 3px;
+  height: 2px;
+  background-color: #C9C9C9;
   margin-top: -20px;
   margin-left: -4px;
   margin-right: -4px;
-}
-.step-block .step-line.done {
-  background-color: #A174A6;
 }
 
 .swiper {

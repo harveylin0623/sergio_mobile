@@ -8,19 +8,31 @@
 			@include size(40px);
 			line-height: 40px;
 			margin: 0 auto;
-			text-align: center;
+			border: 1px solid map-get($basicColor, neutral-4);
 			background-color: map-get($basicColor, neutral-4);
 			color: map-get($basicColor, neutral-7);
 			border-radius: map-get($radius, full);
+			text-align: center;
 		}
 		.text {
 			padding-top: map-get($paddingData, 2);
-			font-size: map-get($fontSize, xs, size);
 			color: map-get($basicColor, neutral-2);
+		}
+		&.current {
+			.number {
+				border: 1px solid map-get($basicColor, primary-1);
+				background-color: map-get($basicColor, primary-1);
+				color: map-get($basicColor, neutral-7);
+			}
+			.text {
+				color: map-get($basicColor, primary-1);
+			}
 		}
 		&.done {
 			.number {
-				background-color: map-get($basicColor, primary-2);
+				border-color: map-get($basicColor, primary-2);
+				background-color: map-get($basicColor, neutral-7);
+				color: map-get($basicColor, primary-2);
 			}
 			.text {
 				color: map-get($basicColor, primary-2);
@@ -28,13 +40,10 @@
 		}
 	}
 	.step-line {
+		@include size(80px, 2px);
 		background-color: map-get($basicColor, neutral-4);
-		@include size(80px, 3px);
 		margin-top: -20px;
 		margin-left: -4px;
 		margin-right: -4px;
-		&.done {
-			background-color: map-get($basicColor, primary-2);
-		}
 	}
 }
