@@ -1455,11 +1455,11 @@ Vue.component('category-sidebar', {
             <span class="mx-8">/</span>
             <a :href="realUrl.register_step1" class="text-neutral-0">註冊</a>
           </div>
-          <div class="d-flex align-items-center">
+          <a :href="realUrl.cart" class="d-flex align-items-center text-neutral-0">
             <i class="bi bi-file-earmark-check"></i>
             <span class="mx-4">詢價單</span>
             <span v-if="isAuth" class="text-wrong">({{ cartCount }})</span>
-          </div>
+          </a>
         </div>
       </div>
       <div class="scroll-block overflow-auto">
