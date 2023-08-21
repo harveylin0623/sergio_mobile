@@ -108,6 +108,7 @@ const options = {
 					'js/src/mixin/cartStep1Logic.js',
 					'js/src/mixin/cartStep2Logic.js',
 					'js/src/mixin/orderPay.js',
+					'js/src/mixin/signUpStepData.js',
 				],
 			},
 			transform: {

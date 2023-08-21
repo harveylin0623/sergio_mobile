@@ -1,7 +1,7 @@
 export default function ({ apiUrl, pageUrl }) {
   new Vue({
     el: '#app',
-    mixins: [checkBarcodeMixin, registerListMixin, userAddressMixin, userBirthdayMixin],
+    mixins: [checkBarcodeMixin, registerListMixin, userAddressMixin, userBirthdayMixin, signUpStepMixin],
     store: window.myVuexStore,
     data: {
       user: { mobile: '', email: '', password: '', confirm_password: '', name: '', gender: '', security_question: '', security_answer: '', einvoice_carrier_no: '', agree: false },
@@ -11,10 +11,6 @@ export default function ({ apiUrl, pageUrl }) {
       isLoading: false,
       apiUrl,
       pageUrl,
-      stepList: [
-        { text: '填寫資料', done: false },
-        { text: '手機驗證', done: false },
-      ]
     },
     computed: {
       totalTerms() {
