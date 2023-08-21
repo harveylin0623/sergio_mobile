@@ -6,8 +6,8 @@ export default function ({ apiUrl, pageUrl }) {
     data: {
       user: { mobile: '', email: '', password: '', confirm_password: '', name: '', gender: '', security_question: '', security_answer: '', einvoice_carrier_no: '', agree: false },
       termInfo: {},
-      termModal: { title: '', content: '' },
-      tipInfo: { message: '' },
+      termModal: { title: '', content: '', isOpen: false },
+      tipInfo: { status: false, message: '', isOpen: false },
       isLoading: false,
       apiUrl,
       pageUrl,
@@ -29,7 +29,7 @@ export default function ({ apiUrl, pageUrl }) {
         let data = this.termInfo[id]
         this.termModal.title = data.title
         this.termModal.content = data.content
-        $('#termPopup').modal('show')
+        this.termModal.isOpen = true
       },
       async registerCheck() {
         let response = await authApi.register_check({
@@ -69,7 +69,7 @@ export default function ({ apiUrl, pageUrl }) {
       },
       errorHandler(message) {
         this.tipInfo.message = message
-        $('#tipPopup').modal('show')
+        this.tipInfo.isOpen = true
         this.isLoading = false
       },
       saveUserData(temp_access_token) {

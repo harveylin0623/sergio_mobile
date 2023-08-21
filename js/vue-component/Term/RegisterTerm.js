@@ -17,7 +17,7 @@ export default (() => {
     },
     template: `
       <div>
-        <span class="text-limeGreen" type="button" @click="clickHandler">{{ info.title }}</span>{{ concatText }}
+        <span class="text-primary-2" @click="clickHandler">{{ info.title }}</span>{{ concatText }}
       </div>`
   })
 })()
