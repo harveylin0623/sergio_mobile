@@ -8,7 +8,7 @@
 	<meta name="aes_key" content="d129652885ce50336e84edcdc3037e91">
 	<meta name="base_url" content="https://knn-ec-uat.wisho2o.com">
 	<title>註冊(2)</title>
-	<link rel="stylesheet" href="../libs/fontAwesome5/css/all.min.css">
+	<link rel="stylesheet" href="../libs/bootstrapIcon/bootstrap-icons.min.css">
 	<link rel="stylesheet" href="../dist/css/vendor.min.css">
 	<link rel="stylesheet" href="../css/main.css" />
 	<script src="../libs/vue/vue.js"></script>
@@ -30,93 +30,44 @@
 		<div class="content-section">
 			<div class="container">
 				<h2 class="page-title">會員註冊</h2>
-				<div class="formCnt">
-					<div class="stepCnt">
-						<div class="sItem ing">
-							<div class="cube done">
-								<i class="fal fa-check"></i>
-							</div>
-							<div class="text">填寫資料</div>
-						</div>
-						<div class="sLine active"></div>
-						<div class="sItem ing">
-							<div class="cube">2</div>
-							<div class="text">手機驗證</div>
-						</div>
+
+				<step-block 
+					:step-list="stepList"
+					:current-step-index="2"
+				></step-block>
+
+				<validation-observer tag="div" ref="form">
+					<div class="py-20 px-12 mb-20 text-sm bg-neutral-6 rounded-co text-center">
+						<p>已將驗證碼寄至</p>
+						<p class="py-2">{{ encodePhoneText }}</p>
+						<p>若您未收到驗證碼點選「重新寄送按鈕」。</p>
 					</div>
-					<validation-observer tag="div" ref="form">
-						<div class="form-group mb-3">
-							<div class="px-2 py-3 bd-limeGreen rounded">
-								<div class="mb-0 title sm text-center">
-									<p>已將驗證碼寄至</p>
-									<p class="py-2">{{ encodePhoneText }}</p>
-									<p>若您未收到驗證碼點選「重新寄送按鈕」。</p>
-								</div>
-							</div>
+					<validation-provider tag="div" class="mb-20" rules="required" v-slot="{ errors,failed }">
+						<label class="text-sm w-100">
+							<span class="text-error-text">*</span>驗證碼
+						</label>
+						<div class="d-flex">
+							<input 
+								type="text" 
+								placeholder="請輸入手機驗證碼" 
+								v-model.trim="user.verify_code" 
+								@keyup.enter="submitHandler"
+							/>
+							<button class="btn btn-outline-a flex-shrink-0" style="--w:100px;" @click="sendToMobile">重寄驗證碼</button>
 						</div>
-						<validation-provider tag="div" class="button-input-group" rules="required" v-slot="{ errors,failed }">
-							<input type="text" class="form-control" placeholder="請輸入手機驗證碼" v-model.trim="user.verify_code" @keyup.enter="submitHandler"/>
-							<button class="btn btn-tomatoRed" @click="sendToMobile">重新寄送</button>
-							<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
-						</validation-provider>
-						<hr>
-						<div class="border bg-light rounded p-3 my-4 d-flex justify-content-center"
-							id="recaptcha-container" v-if="false"></div>
-						<button class="btn btn-limeGreen form-control mb-4" @click="submitHandler">驗證</button>
-					</validation-observer>
-				</div>
+						<p class="error-msg" v-show="failed">{{ errors[0] }}</p>
+					</validation-provider>
+					<button class="btn btn-a" @click="submitHandler">驗證</button>
+				</validation-observer>
 			</div>
 		</div>
 
-		<div class="modal fade" id="refillPopup" data-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header mx-auto">
-						<h2>提示</h2>
-					</div>
-					<div class="modal-body">
-						<p class="text-center">請重新填寫表單</p>
-					</div>
-					<div class="modal-footer">
-						<a :href="pageUrl.register_step1" class="btn btn-limeGreen mx-auto limit">確認</a>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="modal fade" id="tipPopup" data-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header mx-auto">
-						<h2>提示</h2>
-					</div>
-					<div class="modal-body">
-						<p class="text-center">{{ tipInfo.message }}</p>
-					</div>
-					<div class="modal-footer">
-						<a :href="pageUrl.login" class="btn btn-limeGreen mx-auto limit" v-if="tipInfo.status">確認</a>
-						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-else>確認</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="modal fade" id="smsPopup" data-backdrop="static">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header mx-auto">
-						<h2>提示</h2>
-					</div>
-					<div class="modal-body">
-						<p class="text-center">{{ smsInfo.message }}</p>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-limeGreen mx-auto limit" data-dismiss="modal" v-if="smsInfo.status">確認</button>
-						<a :href="pageUrl.register_step1" class="btn btn-limeGreen mx-auto limit" v-else>確認</a>
-					</div>
-				</div>
-			</div>
-		</div>
+		<tip-modal
+			:is-open.sync="tipInfo.isOpen"
+			:status="tipInfo.status"
+			:content="tipInfo.message"
+			@confirm="confirmHandler"
+		></tip-modal>
 
 		<app-download-modal></app-download-modal>
 
@@ -125,9 +76,7 @@
 		<my-footer></my-footer>
 	</div>
 
-	<script async src="https://www.google.com/recaptcha/api.js"></script>
 	<script type="module">
-		
 		import app from '../js/page/register/step2.js'
 		app({
 			apiUrl: {
@@ -135,7 +84,6 @@
 				keyword: '/api/scenes/home/keyword',
 				resend_register_verify: '/api/third_party_auth/resend_register_verify',
 				register_verify: '/api/third_party_auth/register_verify',
-				verify_google_recaptcha: 'http://localhost:3034/mmrmProd/recaptcha'
 			},
 			pageUrl: {
 				home: './home.html',
