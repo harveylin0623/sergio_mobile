@@ -45,7 +45,11 @@ export default function({ apiUrl, pageUrl }) {
         this.isLoading = false
       },
       confirmHandler() {
-        if (this.tipInfo.status) location.href = this.redirectUrl
+        if (this.tipInfo.status) {
+          location.href = this.redirectUrl
+        } else {
+          this.tipInfo.isOpen = false
+        }
       }
     },
     mounted() {
