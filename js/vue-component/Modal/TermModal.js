@@ -1,6 +1,6 @@
 Vue.component('article-modal', {
   props: {
-    id: { type: String, default: 'article-modal-1' },
+    id: { type: String, default: 'term-modal-1' },
     title: { type: String, default: '提示' },
     content: { type: String, default: '' },
     isOpen: { type: Boolean, default: false },

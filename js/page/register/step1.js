@@ -92,8 +92,11 @@ export default function ({ apiUrl, pageUrl }) {
         }
         let registerInfo = await this.register()
         if (!registerInfo.status) return this.errorHandler(registerInfo.message)
+        this.tipInfo.status = true
+        this.tipInfo.message = registerInfo.message
+        this.tipInfo.isOpen = true
         this.saveUserData(registerInfo.temp_access_token)
-        location.href = this.pageUrl.register_step2
+        this.isLoading = false
       },
       async setUserData() {
         let storageData = window.sessionStorageObj.getItem('register')
@@ -106,13 +109,23 @@ export default function ({ apiUrl, pageUrl }) {
         await this.$nextTick()
         this.addressInfo.district = addressInfo.district
         this.userBirthday.month = userBirthday.month
+      },
+      confirmHandler() {
+        if (this.tipInfo.status) {
+          location.href = this.pageUrl.register_step2
+        } else {
+          this.tipInfo.isOpen = false
+        }
+      },
+      async init() {
+        let termRes = await termApi.brief_term({ url: apiUrl.term, data: { type: ['register'] } })
+        this.termInfo = this.createTermInfo(termRes.aaData)
+        this.setUserData()
       }
     },
     async mounted() {
       this.isLoading = true
-      let termRes = await termApi.brief_term({ url: apiUrl.term, data: { type: ['register'] } })
-      this.termInfo = this.createTermInfo(termRes.aaData)
-      this.setUserData()
+      await this.init()
       this.isLoading = false
     }
   })

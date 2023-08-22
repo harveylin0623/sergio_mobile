@@ -71,6 +71,9 @@ export default function({ apiUrl, pageUrl }) {
         this.tipInfo.isOpen = true
         this.isLoading = false
       },
+      closeTipModal() {
+        this.tipInfo.isOpen = false
+      },
       confirmHandler() {
         const { register_step1, login } = this.pageUrl
         switch (this.actionType) {
@@ -78,10 +81,12 @@ export default function({ apiUrl, pageUrl }) {
             location.href = register_step1
             break
           case 'sms':
-            if (!this.tipInfo.status) location.href = register_step1
+            if (this.tipInfo.status) this.closeTipModal()
+            else location.href = register_step1
             break
           case 'verify':
             if (this.tipInfo.status) location.href = login
+            else this.closeTipModal()
             break
         }
       }
