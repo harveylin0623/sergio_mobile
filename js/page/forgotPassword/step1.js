@@ -25,8 +25,11 @@ export default function({ apiUrl, pageUrl }) {
           this.user.temp_access_token = response.aaData.temp_access_token
           window.sessionStorageObj.setItem('forgetPw', this.user)
         }
-        $('#tipPopup').modal('show')
+        this.tipInfo.isOpen = true
         this.isLoading = false
+      },
+      confirmHandler() {
+        if (this.tipInfo.status) location.href = this.pageUrl.forget_password_step2
       }
     },
   })

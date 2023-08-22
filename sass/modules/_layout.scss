@@ -68,6 +68,7 @@ hr {
 	margin-bottom: map-get($marginData, 20);
 	color: map-get($basicColor, primary-1);
 	text-align: center;
+	font-weight: 500;
 }
 
 .product-row {
