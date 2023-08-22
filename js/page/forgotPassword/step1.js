@@ -29,7 +29,11 @@ export default function({ apiUrl, pageUrl }) {
         this.isLoading = false
       },
       confirmHandler() {
-        if (this.tipInfo.status) location.href = this.pageUrl.forget_password_step2
+        if (this.tipInfo.status) {
+          location.href = this.pageUrl.forget_password_step2
+        } else {
+          this.tipInfo.isOpen = false
+        }
       }
     },
   })

@@ -42,6 +42,11 @@ export default function({ apiUrl, pageUrl }) {
         }
         this.isLoading = false
       },
+      errorHandler(message) {
+        this.tipInfo.message = message
+        this.tipInfo.isOpen = true
+        this.isLoading = false
+      },
       async submitHandler() {
         let isValid = await this.$refs.form.validate()
         if (!isValid) return
@@ -60,6 +65,9 @@ export default function({ apiUrl, pageUrl }) {
         this.tipInfo.isOpen = true
         this.isLoading = false
       },
+      closeModal() {
+        this.tipInfo.isOpen = false
+      },
       confirmHandler() {
         const { forget_password_step1, forget_password_step3 } = this.pageUrl
         switch (this.actionType) {
@@ -67,10 +75,12 @@ export default function({ apiUrl, pageUrl }) {
             location.href = forget_password_step1
             break
           case 'sms':
-            if (!this.tipInfo.status) location.href = forget_password_step1
+            if (this.tipInfo.status) this.closeModal()
+            else location.href = forget_password_step1
             break
           case 'verify':
             if (this.tipInfo.status) location.href = forget_password_step3
+            else this.closeModal()
             break
         }
       }
