@@ -227,7 +227,6 @@ Vue.component('tip-modal', {
   },
   methods: {
     confirmHandler() {
-      this.$emit('update:isOpen', false)
       this.$emit('confirm')
     }
   },
